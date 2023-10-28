@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}
+<link href="{% static 'users/login.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+<div class="card users-login-card">
+    <div class="card-body">
+        <h5 class="card-title">Login</h5>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="Username" class="form-label">Username</label>
+                <input type="text" id="Username" name="username" class="form-control"  aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {{ form.errors }}
+    </div>
+</div>
+{% endblock %}
