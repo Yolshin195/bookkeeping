@@ -33,6 +33,10 @@ class BaseReferenceModel(BaseEntity):
     def __str__(self):
         return f'{self.code} - {self.name}'
 
+    @classmethod
+    def find_by_code(cls, code):
+        return cls.objects.get(code=code)
+
 
 class Currency(BaseReferenceModel):
     pass

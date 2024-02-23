@@ -1,0 +1,24 @@
+[
+  {
+    "model": "transactions.transactiontype",
+    "pk": "730eff1c-e6da-4acc-b083-05b351c6edd4",
+    "fields": {
+      "created_at": "2024-02-24 01:11",
+      "updated_at": "2024-02-24 01:11",
+      "code": "expense",
+      "name": "expense",
+      "description": "expense"
+    }
+  },
+  {
+    "model": "transactions.transactiontype",
+    "pk": "ceb97345-c1f3-4ab1-8592-51032d042402",
+    "fields": {
+      "created_at": "2024-02-24 01:11",
+      "updated_at": "2024-02-24 01:11",
+      "code": "income",
+      "name": "income",
+      "description": "income"
+    }
+  }
+]

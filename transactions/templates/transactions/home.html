@@ -36,10 +36,9 @@
                      preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
                     <rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect>
                 </svg>
-                <h2 class="fw-normal">Heading</h2>
+                <h2 class="fw-normal">Add income</h2>
                 <p>And lastly this, the third column of representative placeholder content.</p>
-                <p><a class="btn btn-secondary" href="https://getbootstrap.com/docs/5.3/examples/carousel/#">View
-                    details »</a></p>
+                <p><a class="btn btn-secondary" href="{% url 'create_income_transaction' %}">Add income »</a></p>
             </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
 
@@ -85,12 +84,7 @@
                     with some actual content. Your content.</p>
             </div>
             <div class="col-md-5">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500"
-                     height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
-                     preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-bg)"></rect>
-                    <text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text>
-                </svg>
+                <canvas id="expensesByCategoryChart" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500"></canvas>
             </div>
         </div>
 
@@ -114,10 +108,10 @@
       new Chart(expensesByDayChartCanvas, {
         type: 'bar',
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          labels: {{expenses_by_day_report.labels|safe }},
           datasets: [{
             label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            data: {{expenses_by_day_report.data|safe }},
             borderWidth: 1
           }]
         },
@@ -137,23 +131,70 @@
                 type: 'pie',
                 data: {
                   labels: [
-                    'Red',
-                    'Blue',
-                    'Yellow'
+                    'Expense',
+                    'Balance',
+                    'Income'
                   ],
                   datasets: [{
                     label: 'My First Dataset',
-                    data: [300, 50, 100],
+                    data: [{{balance_report.expense}}, {{balance_report.difference}}, {{balance_report.income}}],
                     backgroundColor: [
                       'rgb(255, 99, 132)',
                       'rgb(54, 162, 235)',
-                      'rgb(255, 205, 86)'
+                      'rgb(75, 192, 192)'
                     ],
                     hoverOffset: 4
                   }]
                 },
                 options: {
                 }
+            }
+        );
+    </script>
+    <script>
+        const expensesByCategoryChartCanvas = document.getElementById('expensesByCategoryChart');
+
+        new Chart(expensesByCategoryChartCanvas, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Eating',
+                        'Drinking',
+                        'Sleeping',
+                        'Designing',
+                        'Coding',
+                        'Cycling',
+                        'Running'
+                      ],
+                      datasets: [{
+                        label: 'My First Dataset',
+                        data: [65, 59, 90, 81, 56, 55, 40],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        pointBackgroundColor: 'rgb(255, 99, 132)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(255, 99, 132)'
+                      }, {
+                        label: 'My Second Dataset',
+                        data: [28, 48, 40, 19, 96, 27, 100],
+                        fill: true,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        pointBackgroundColor: 'rgb(54, 162, 235)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(54, 162, 235)'
+                      }]
+                },
+                options: {
+                    elements: {
+                      line: {
+                        borderWidth: 3
+                      }
+                    }
+                },
             }
         );
     </script>

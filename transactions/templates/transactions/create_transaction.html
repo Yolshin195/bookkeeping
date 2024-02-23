@@ -12,7 +12,7 @@
     </nav>
 
     <form method="post">
-        <legend>Add expense</legend>
+        <legend>{{ form.title }}</legend>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Create Transaction</button>
