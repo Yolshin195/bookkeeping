@@ -1,40 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<main class="container mt-3">
 
-<a href="{% url 'create' %}">create</a>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Your transaction</li>
+      </ol>
+    </nav>
 
-{% if latest_transaction_list %}
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">type</th>
-        <th scope="col">category</th>
-        <th scope="col">expense_account</th>
-        <th scope="col">expense_amount</th>
-        <th scope="col">income_account</th>
-        <th scope="col">income_amount</th>
-        <th scope="col">comment</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for transaction in latest_transaction_list %}
-    <tr>
-        <th scope="row">1</th>
-        <td>{{ transaction.type }}</td>
-        <td>{{ transaction.category }}</td>
-        <td>{{ transaction.expense_account }}</td>
-        <td>{{ transaction.expense_amount }}</td>
-        <td>{{ transaction.income_account }}</td>
-        <td>{{ transaction.income_amount }}</td>
-        <td>{{ transaction.comment }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No polls are available.</p>
-{% endif %}
+    <a href="{% url 'create' %}">create</a>
 
+    {% if latest_transaction_list %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">type</th>
+            <th scope="col">category</th>
+            <th scope="col">expense_account</th>
+            <th scope="col">expense_amount</th>
+            <th scope="col">income_account</th>
+            <th scope="col">income_amount</th>
+            <th scope="col">comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for transaction in latest_transaction_list %}
+        <tr>
+            <th scope="row">1</th>
+            <td>{{ transaction.type }}</td>
+            <td>{{ transaction.category }}</td>
+            <td>{{ transaction.expense_account }}</td>
+            <td>{{ transaction.expense_amount }}</td>
+            <td>{{ transaction.income_account }}</td>
+            <td>{{ transaction.income_amount }}</td>
+            <td>{{ transaction.comment }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No polls are available.</p>
+    {% endif %}
+
+</main>
 {% endblock %}

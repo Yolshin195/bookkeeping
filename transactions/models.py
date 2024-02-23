@@ -1,6 +1,12 @@
 import uuid
+from enum import Enum
 
 from django.db import models
+
+
+class TransactionTypeEnum(Enum):
+    EXPENSE = "expense"
+    INCOME = "income"
 
 
 class BaseEntity(models.Model):
