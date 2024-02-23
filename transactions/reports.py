@@ -47,3 +47,25 @@ def get_expenses_by_day():
         "labels": [item['day'].weekday() for item in expenses_by_day],
         "data": [int(item['total_expenses']) for item in expenses_by_day]
     }
+
+
+def get_expenses_by_category():
+    expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
+
+    end_date = datetime.now()
+    start_date = datetime(end_date.year, end_date.month, 1)
+
+    # Выполняем запрос на агрегацию данных
+    expenses_by_category = Transaction.objects.filter(
+        type=expense_type,  # Фильтруем только расходы
+        created_at__date__gte=start_date,  # Учитываем только транзакции, созданные после начальной даты
+        created_at__date__lte=end_date  # Учитываем только транзакции, созданные до конечной даты
+    ).values('category__name').annotate(
+        total_expenses=Sum('expense_amount')  # Вычисляем сумму расходов для каждой категории
+    ).order_by('category__name')
+
+    return {
+        "labels": [item['category__name'] for item in expenses_by_category],
+        "data": [int(item['total_expenses']) for item in expenses_by_category]
+    }
+

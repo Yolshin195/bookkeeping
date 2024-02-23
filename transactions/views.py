@@ -3,14 +3,15 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import ExpenseTransactionForm, IncomeTransactionForm
 from .models import Transaction, TransactionTypeEnum, TransactionType
-from .reports import get_balance, get_expenses_by_day
+from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 
 
 def home(request):
     context = {
         "title": "test",
         "balance_report": get_balance(),
-        "expenses_by_day_report": get_expenses_by_day()
+        "expenses_by_day_report": get_expenses_by_day(),
+        "expenses_by_category_report": get_expenses_by_category()
     }
     return render(request, "transactions/home.html", context)
 
