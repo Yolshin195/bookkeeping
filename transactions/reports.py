@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from datetime import datetime, timedelta
 
 from django.db.models import Sum, When, Case, DecimalField, F, Value
@@ -5,11 +6,23 @@ from django.db.models.functions import TruncDay
 
 from transactions.models import Transaction, TransactionTypeEnum, TransactionType
 
+if TYPE_CHECKING:
+    from django.contrib.auth.models import User
 
-def get_balance():
+
+def get_balance(owner: "User" = None):
+    labels = ['Income', 'Expense', 'Balance']
+    if owner is None:
+        return {
+            "labels": labels,
+            "data": [100000, 80000, 20000]
+        }
+
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     income_type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
-    result = Transaction.objects.aggregate(
+    result = Transaction.objects.filter(
+        owner=owner
+    ).aggregate(
         total_expenses=Sum(Case(When(type=expense_type, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
         total_income=Sum(Case(When(type=income_type, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
     )
@@ -20,13 +33,18 @@ def get_balance():
     # Вычисляем разницу между доходами и расходами
     difference = total_income - total_expenses
     return {
-        "income": total_income,
-        "expense": total_expenses,
-        "difference": difference
+        "labels": labels,
+        "data": [total_income, total_expenses, difference]
     }
 
 
-def get_expenses_by_day():
+def get_expenses_by_day(owner: "User" = None):
+    if owner is None:
+        return {
+            "labels": [1, 2, 3, 4, 5, 6],
+            "data": [100000, 80000, 20000, 0, 2000, 6000]
+        }
+
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     # Вычисляем начальную и конечную даты для последней недели
     end_date = datetime.now()
@@ -34,6 +52,7 @@ def get_expenses_by_day():
 
     # Выполняем запрос на агрегацию данных
     expenses_by_day = Transaction.objects.filter(
+        owner=owner,
         type=expense_type,  # Фильтруем только расходы
         created_at__gte=start_date,  # Учитываем только транзакции, созданные после начальной даты
         created_at__lte=end_date  # Учитываем только транзакции, созданные до конечной даты
@@ -49,7 +68,13 @@ def get_expenses_by_day():
     }
 
 
-def get_expenses_by_category():
+def get_expenses_by_category(owner: "User" = None):
+    if owner is None:
+        return {
+            "labels": ["Food", "Snack", "Car"],
+            "data": [100000, 80000, 50000]
+        }
+
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
 
     end_date = datetime.now()
@@ -57,6 +82,7 @@ def get_expenses_by_category():
 
     # Выполняем запрос на агрегацию данных
     expenses_by_category = Transaction.objects.filter(
+        owner=owner,
         type=expense_type,  # Фильтруем только расходы
         created_at__date__gte=start_date,  # Учитываем только транзакции, созданные после начальной даты
         created_at__date__lte=end_date  # Учитываем только транзакции, созданные до конечной даты

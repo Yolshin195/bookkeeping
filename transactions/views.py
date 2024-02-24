@@ -9,9 +9,9 @@ from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 def home(request):
     context = {
         "title": "test",
-        "balance_report": get_balance(),
-        "expenses_by_day_report": get_expenses_by_day(),
-        "expenses_by_category_report": get_expenses_by_category()
+        "balance_report": get_balance(request.user if request.user.is_authenticated else None),
+        "expenses_by_day_report": get_expenses_by_day(request.user if request.user.is_authenticated else None),
+        "expenses_by_category_report": get_expenses_by_category(request.user if request.user.is_authenticated else None)
     }
     return render(request, "transactions/home.html", context)
 

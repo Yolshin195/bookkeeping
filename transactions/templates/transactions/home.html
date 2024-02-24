@@ -126,14 +126,10 @@
         new Chart(balanceChartCanvas, {
                 type: 'pie',
                 data: {
-                  labels: [
-                    'Expense',
-                    'Balance',
-                    'Income'
-                  ],
+                  labels: {{ balance_report.labels|safe }},
                   datasets: [{
                     label: 'My First Dataset',
-                    data: [{{balance_report.expense}}, {{balance_report.difference}}, {{balance_report.income}}],
+                    data: {{ balance_report.data|safe }},
                     backgroundColor: [
                       'rgb(255, 99, 132)',
                       'rgb(54, 162, 235)',
