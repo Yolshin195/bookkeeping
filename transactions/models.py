@@ -1,6 +1,7 @@
 import uuid
 from enum import Enum
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -38,15 +39,22 @@ class BaseReferenceModel(BaseEntity):
         return cls.objects.get(code=code)
 
 
-class Currency(BaseReferenceModel):
+class BaseOwnerEntity(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class Currency(BaseReferenceModel, BaseOwnerEntity):
     pass
 
 
-class Category(BaseReferenceModel):
+class Category(BaseReferenceModel, BaseOwnerEntity):
     pass
 
 
-class Account(BaseReferenceModel):
+class Account(BaseReferenceModel, BaseOwnerEntity):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
 
 
@@ -54,7 +62,7 @@ class TransactionType(BaseReferenceModel):
     pass
 
 
-class Transaction(BaseEntity):
+class Transaction(BaseEntity, BaseOwnerEntity):
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     expense_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='expense_transactions',

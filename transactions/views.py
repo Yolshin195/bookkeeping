@@ -16,8 +16,9 @@ def home(request):
     return render(request, "transactions/home.html", context)
 
 
+@login_required
 def index(request):
-    latest_transaction_list = Transaction.objects.order_by("-created_at")[:5]
+    latest_transaction_list = Transaction.objects.filter(owner=request.user).order_by("-created_at")[:5]
 
     context = {
         "latest_transaction_list": latest_transaction_list,
@@ -30,6 +31,7 @@ def create_transaction(request):
     if request.method == 'POST':
         form = ExpenseTransactionForm(request.POST)
         if form.is_valid():
+            form.instance.owner = request.user
             form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
             form.save()  # Сохранение новой транзакции в базе данных
             return redirect('/')  # Перенаправление после успешного создания
@@ -44,6 +46,7 @@ def create_income_transaction(request):
     if request.method == 'POST':
         form = IncomeTransactionForm(request.POST)
         if form.is_valid():
+            form.instance.owner = request.user
             form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
             form.save()  # Сохранение новой транзакции в базе данных
             return redirect('/')  # Перенаправление после успешного создания
