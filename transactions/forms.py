@@ -1,5 +1,5 @@
 from django import forms
-from .models import Transaction
+from .models import Transaction, Category, Account
 
 
 class ExpenseTransactionForm(forms.ModelForm):
@@ -7,22 +7,29 @@ class ExpenseTransactionForm(forms.ModelForm):
         model = Transaction
         fields = ['category', 'expense_account', 'expense_amount']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super(ExpenseTransactionForm, self).__init__(*args, **kwargs)
         self.title = "Add Expense"
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
         self.fields['expense_account'].widget.attrs.update({'class': 'form-select'})
         self.fields['expense_amount'].widget.attrs.update({'class': 'form-control'})
 
+        self.fields['category'].queryset = Category.objects.filter(owner=user)
+        self.fields['expense_account'].queryset = Account.objects.filter(owner=user)
+
 
 class IncomeTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['category', 'income_account', 'income_amount']
+        fields = ['category', 'income_account', 'income_amount', 'comment']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super(IncomeTransactionForm, self).__init__(*args, **kwargs)
         self.title = "Add Income"
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
         self.fields['income_account'].widget.attrs.update({'class': 'form-select'})
         self.fields['income_amount'].widget.attrs.update({'class': 'form-control'})
+        self.fields['comment'].widget.attrs.update({'class': 'form-control'})
+
+        self.fields['category'].queryset = Category.objects.filter(owner=user)
+        self.fields['income_account'].queryset = Account.objects.filter(owner=user)

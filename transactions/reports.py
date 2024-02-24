@@ -34,7 +34,7 @@ def get_balance(owner: "User" = None):
     difference = total_income - total_expenses
     return {
         "labels": labels,
-        "data": [total_income, total_expenses, difference]
+        "data": [int(total_income), int(total_expenses), int(difference)]
     }
 
 

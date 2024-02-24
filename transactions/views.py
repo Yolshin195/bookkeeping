@@ -29,14 +29,14 @@ def index(request):
 @login_required
 def create_transaction(request):
     if request.method == 'POST':
-        form = ExpenseTransactionForm(request.POST)
+        form = ExpenseTransactionForm(request.POST, user=request.user)
         if form.is_valid():
             form.instance.owner = request.user
             form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
             form.save()  # Сохранение новой транзакции в базе данных
             return redirect('/')  # Перенаправление после успешного создания
     else:
-        form = ExpenseTransactionForm()
+        form = ExpenseTransactionForm(user=request.user)
 
     return render(request, 'transactions/create_transaction.html', {'form': form})
 
@@ -44,14 +44,14 @@ def create_transaction(request):
 @login_required
 def create_income_transaction(request):
     if request.method == 'POST':
-        form = IncomeTransactionForm(request.POST)
+        form = IncomeTransactionForm(request.POST, user=request.user)
         if form.is_valid():
             form.instance.owner = request.user
             form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
             form.save()  # Сохранение новой транзакции в базе данных
             return redirect('/')  # Перенаправление после успешного создания
     else:
-        form = IncomeTransactionForm()
+        form = IncomeTransactionForm(user=request.user)
 
     return render(request, 'transactions/create_transaction.html', {'form': form})
 
