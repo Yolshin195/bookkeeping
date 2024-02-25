@@ -1,3 +1,6 @@
+import calendar
+import datetime
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -18,10 +21,20 @@ def home(request):
 
 @login_required
 def index(request):
-    latest_transaction_list = Transaction.objects.filter(owner=request.user).order_by("-created_at")[:5]
+    current_date = datetime.datetime.now()
+    selected_month = int(request.GET.get("selected_month", default=current_date.month))
+    current_year = current_date.year
+
+    latest_transaction_list = Transaction.objects.filter(
+        owner=request.user,
+        created_at__month=selected_month,
+        created_at__year=current_year
+    ).order_by("-created_at")
 
     context = {
-        "latest_transaction_list": latest_transaction_list,
+        "month_name": calendar.month_name[1:],
+        "selected_month": selected_month,
+        "latest_transaction_list": latest_transaction_list
     }
     return render(request, "transactions/index.html", context)
 

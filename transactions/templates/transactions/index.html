@@ -16,21 +16,11 @@
             <a href="{% url 'create' %}" class="btn btn-outline-primary">Add expenses</a>
             <a href="{% url 'create_income_transaction' %}" class="btn btn-outline-primary">Add income</a>
         </div>
-        <form class="col-md-3 col-sm-12 ms-auto">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Select month</option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
+        <form class="col-md-3 col-sm-12 ms-auto" method="get">
+            <select name="selected_month" class="form-select" aria-label="Default select example" onchange="this.form.submit()">
+                {% for name in month_name %}
+                <option value="{{ forloop.counter }}" {% if forloop.counter == selected_month %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
             </select>
         </form>
     </div>
