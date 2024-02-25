@@ -4,44 +4,71 @@
 <main class="container mt-3">
 
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Your transaction</li>
-      </ol>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Your transaction</li>
+        </ol>
     </nav>
 
-    <a href="{% url 'create' %}">create</a>
+    <div class="row">
+
+        <div class="btn-group mb-3 col-md-3 col-sm-12" role="group" aria-label="Basic outlined example">
+            <a href="{% url 'create' %}" class="btn btn-outline-primary">Add expenses</a>
+            <a href="{% url 'create_income_transaction' %}" class="btn btn-outline-primary">Add income</a>
+        </div>
+        <form class="col-md-3 col-sm-12 ms-auto">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Select month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </form>
+    </div>
 
     {% if latest_transaction_list %}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">type</th>
-                <th scope="col">category</th>
-                <th scope="col">expense_account</th>
-                <th scope="col">expense_amount</th>
-                <th scope="col">income_account</th>
-                <th scope="col">income_amount</th>
-                <th scope="col">comment</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for transaction in latest_transaction_list %}
-            <tr>
-                <th scope="row">1</th>
-                <td>{{ transaction.type }}</td>
-                <td>{{ transaction.category }}</td>
-                <td>{{ transaction.expense_account }}</td>
-                <td>{{ transaction.expense_amount }}</td>
-                <td>{{ transaction.income_account }}</td>
-                <td>{{ transaction.income_amount }}</td>
-                <td>{{ transaction.comment }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">type</th>
+                        <th scope="col">category</th>
+                        <th scope="col">expense_account</th>
+                        <th scope="col">expense_amount</th>
+                        <th scope="col">income_account</th>
+                        <th scope="col">income_amount</th>
+                        <th scope="col">comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in latest_transaction_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ transaction.type }}</td>
+                        <td>{{ transaction.category }}</td>
+                        <td>{{ transaction.expense_account }}</td>
+                        <td>{{ transaction.expense_amount }}</td>
+                        <td>{{ transaction.income_account }}</td>
+                        <td>{{ transaction.income_amount }}</td>
+                        <td>{{ transaction.comment }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     {% else %}
     <p>No polls are available.</p>
