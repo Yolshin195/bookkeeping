@@ -45,8 +45,8 @@
 
         <div class="row featurette">
             <div class="col-md-7">
-                <h2 class="featurette-heading fw-normal lh-1">First featurette heading. <span
-                        class="text-body-secondary">It’ll blow your mind.</span></h2>
+                <h2 class="featurette-heading fw-normal lh-1">Balance. <span
+                        class="text-body-secondary">Current month.</span></h2>
                 <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting
                     prose here.</p>
             </div>
@@ -59,8 +59,8 @@
 
         <div class="row featurette">
             <div class="col-md-7 order-md-2">
-                <h2 class="featurette-heading fw-normal lh-1">Oh yeah, it’s that good. <span
-                        class="text-body-secondary">See for yourself.</span></h2>
+                <h2 class="featurette-heading fw-normal lh-1">Expenses by day. <span
+                        class="text-body-secondary">Last seven days.</span></h2>
                 <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how
                     this layout would work with some actual real-world content in place.</p>
             </div>
@@ -73,7 +73,7 @@
 
         <div class="row featurette">
             <div class="col-md-7">
-                <h2 class="featurette-heading fw-normal lh-1">And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
+                <h2 class="featurette-heading fw-normal lh-1">Expenses by category. <span class="text-body-secondary">Current month.</span>
                 </h2>
                 <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really
                     intended to be actually read, simply here to give you a better view of what this would look like
@@ -147,22 +147,13 @@
         const expensesByCategoryChartCanvas = document.getElementById('expensesByCategoryChart');
 
         new Chart(expensesByCategoryChartCanvas, {
-                type: 'radar',
+                type: 'polarArea',
                 data: {
                     labels: {{ expenses_by_category_report.labels|safe }},
-                      datasets: [
-                          {
-                            label: 'My First Dataset',
-                            data: {{ expenses_by_category_report.data|safe }},
-                            fill: true,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgb(255, 99, 132)',
-                            pointBackgroundColor: 'rgb(255, 99, 132)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(255, 99, 132)'
-                          }
-                      ]
+                      datasets: [{
+                        label: 'Expenses by category',
+                        data: {{ expenses_by_category_report.data|safe }}
+                      }]
                 },
                 options: {
                     elements: {

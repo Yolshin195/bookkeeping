@@ -18,10 +18,14 @@ def get_balance(owner: "User" = None):
             "data": [100000, 80000, 20000]
         }
 
+    end_date = datetime.now()
+    start_date = datetime(end_date.year, end_date.month, 1)
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     income_type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
     result = Transaction.objects.filter(
-        owner=owner
+        owner=owner,
+        created_at__gte=start_date,  # Учитываем только транзакции, созданные после начальной даты
+        created_at__lte=end_date  # Учитываем только транзакции, созданные до конечной даты
     ).aggregate(
         total_expenses=Sum(Case(When(type=expense_type, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
         total_income=Sum(Case(When(type=income_type, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
