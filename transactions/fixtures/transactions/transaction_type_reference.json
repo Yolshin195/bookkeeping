@@ -20,5 +20,16 @@
       "name": "income",
       "description": "income"
     }
+  },
+  {
+    "model": "transactions.transactiontype",
+    "pk": "06fa8dc9-2f8f-480d-9d8f-1daf231ff9de",
+    "fields": {
+      "created_at": "2024-02-24 01:11",
+      "updated_at": "2024-02-24 01:11",
+      "code": "exchange",
+      "name": "exchange",
+      "description": "Currency exchange"
+    }
   }
 ]

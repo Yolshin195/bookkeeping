@@ -8,6 +8,7 @@ from django.db import models
 class TransactionTypeEnum(Enum):
     EXPENSE = "expense"
     INCOME = "income"
+    EXCHANGE = "exchange"
 
 
 class BaseEntity(models.Model):
