@@ -9,9 +9,10 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">
-                    {{ category.category }}
+                    {{ category.category__name }}
                 </h5>
                 <p class="card-text">{{category.allocated_amount}}</p>
+                <p class="card-text">{{category.total_expenses}}</p>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                   <div class="progress-bar" style="width: 25%"></div>
                 </div>

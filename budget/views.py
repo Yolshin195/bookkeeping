@@ -7,7 +7,7 @@ from budget.models import BudgetUser, Budget, BudgetCategory
 @login_required
 def index(request):
     budget = BudgetUser.get_current_user_budget(request.user)
-    categories = BudgetCategory.find(budget)
+    categories = BudgetCategory.budget_category_expenses(budget)
 
     context = {
         "budget": budget,
