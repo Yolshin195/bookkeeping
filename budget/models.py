@@ -1,16 +1,7 @@
-from decimal import Decimal
 import uuid
-from dataclasses import dataclass
 from django.db import models
 
-from transactions.models import Category, ProjectLink, Project
-
-
-@dataclass
-class BudgetCategoryExpense:
-    category__name: str
-    allocated_amount: Decimal
-    total_expenses: Decimal
+from transactions.models import Category, ProjectLink
 
 
 class BaseEntity(models.Model):
@@ -34,7 +25,3 @@ class BudgetCategory(BaseEntity, ProjectLink):
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     allocated_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
-    @classmethod
-    def find(cls, project: Project) -> list["BudgetCategory"]:
-        return cls.objects.filter(project=project)
