@@ -3,11 +3,14 @@ from datetime import datetime, timedelta
 
 from django.db.models import Sum, When, Case, DecimalField, F, Value
 from django.db.models.functions import TruncDay
+from django.utils.timezone import get_default_timezone
 
 from transactions.models import Transaction, TransactionTypeEnum, TransactionType
 
 if TYPE_CHECKING:
     from django.contrib.auth.models import User
+
+default_timezone = get_default_timezone()
 
 
 def get_balance(owner: "User" = None):
@@ -18,8 +21,8 @@ def get_balance(owner: "User" = None):
             "data": [100000, 80000, 20000]
         }
 
-    end_date = datetime.now()
-    start_date = datetime(end_date.year, end_date.month, 1)
+    end_date = datetime.now(tz=default_timezone)
+    start_date = datetime(end_date.year, end_date.month, 1, tzinfo=default_timezone)
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     income_type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
     result = Transaction.objects.filter(
@@ -51,7 +54,7 @@ def get_expenses_by_day(owner: "User" = None):
 
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     # Вычисляем начальную и конечную даты для последней недели
-    end_date = datetime.now()
+    end_date = datetime.now(tz=default_timezone)
     start_date = end_date - timedelta(days=7)
 
     # Выполняем запрос на агрегацию данных
@@ -81,8 +84,8 @@ def get_expenses_by_category(owner: "User" = None):
 
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
 
-    end_date = datetime.now()
-    start_date = datetime(end_date.year, end_date.month, 1)
+    end_date = datetime.now(tz=default_timezone)
+    start_date = datetime(end_date.year, end_date.month, 1, tzinfo=default_timezone)
 
     # Выполняем запрос на агрегацию данных
     expenses_by_category = Transaction.objects.filter(
