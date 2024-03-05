@@ -1,5 +1,6 @@
 import uuid
 from enum import Enum
+from typing import Optional
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -47,15 +48,38 @@ class BaseOwnerEntity(models.Model):
         abstract = True
 
 
-class Currency(BaseReferenceModel, BaseOwnerEntity):
+class Project(BaseEntity):
     pass
 
 
-class Category(BaseReferenceModel, BaseOwnerEntity):
+class ProjectLink(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class ProjectUser(BaseEntity, ProjectLink):
+    user = models.OneToOneField(User, unique=True, related_name="project_user", on_delete=models.CASCADE)
+
+    @classmethod
+    def find_project_by_user(cls, user: User) -> Optional[Project]:
+        try:
+            project_user = cls.objects.get(user=user)
+            return project_user.project
+        except cls.DoesNotExist:
+            return None
+
+
+class Currency(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+
+class Category(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
     pass
 
 
-class Account(BaseReferenceModel, BaseOwnerEntity):
+class Account(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
 
 
@@ -63,7 +87,7 @@ class TransactionType(BaseReferenceModel):
     pass
 
 
-class Transaction(BaseEntity, BaseOwnerEntity):
+class Transaction(BaseEntity, BaseOwnerEntity, ProjectLink):
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     expense_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='expense_transactions',

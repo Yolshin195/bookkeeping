@@ -3,8 +3,8 @@
     "model": "transactions.transactiontype",
     "pk": "730eff1c-e6da-4acc-b083-05b351c6edd4",
     "fields": {
-      "created_at": "2024-02-24 01:11",
-      "updated_at": "2024-02-24 01:11",
+      "created_at": "2024-02-24T01:11:00Z",
+      "updated_at": "2024-02-24T01:11:00Z",
       "code": "expense",
       "name": "expense",
       "description": "expense"
@@ -14,8 +14,8 @@
     "model": "transactions.transactiontype",
     "pk": "ceb97345-c1f3-4ab1-8592-51032d042402",
     "fields": {
-      "created_at": "2024-02-24 01:11",
-      "updated_at": "2024-02-24 01:11",
+      "created_at": "2024-02-24T01:11:00Z",
+      "updated_at": "2024-02-24T01:11:00Z",
       "code": "income",
       "name": "income",
       "description": "income"
@@ -25,8 +25,8 @@
     "model": "transactions.transactiontype",
     "pk": "06fa8dc9-2f8f-480d-9d8f-1daf231ff9de",
     "fields": {
-      "created_at": "2024-02-24 01:11",
-      "updated_at": "2024-02-24 01:11",
+      "created_at": "2024-02-24T01:11:00Z",
+      "updated_at": "2024-02-24T01:11:00Z",
       "code": "exchange",
       "name": "exchange",
       "description": "Currency exchange"

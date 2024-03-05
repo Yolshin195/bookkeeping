@@ -1,13 +1,9 @@
 from decimal import Decimal
 import uuid
-from typing import Optional
 from dataclasses import dataclass
-
-from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Sum
 
-from transactions.models import Category
+from transactions.models import Category, ProjectLink, Project
 
 
 @dataclass
@@ -30,38 +26,15 @@ class BaseEntity(models.Model):
         return f'{self.id}'
 
 
-class Budget(BaseEntity):
+class Budget(BaseEntity, ProjectLink):
     pass
 
 
-class BudgetUser(BaseEntity):
-    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    @classmethod
-    def get_current_user_budget(cls, user: User) -> Optional[Budget]:
-        try:
-            budget_user = cls.objects.get(user=user)
-            user_budget = budget_user.budget
-            return user_budget
-        except cls.DoesNotExist:
-            return None
-
-
-class BudgetCategory(BaseEntity):
+class BudgetCategory(BaseEntity, ProjectLink):
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     allocated_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     @classmethod
-    def find(cls, budget: Budget) -> list["BudgetCategory"]:
-        return cls.objects.filter(budget=budget)
-
-    @classmethod
-    def budget_category_expenses(cls, budget: Budget) -> list[BudgetCategoryExpense]:
-        # Получаем сумму расходов для каждой категории из BudgetCategory для всех пользователей
-        return BudgetCategory.objects.filter(
-            budget=budget
-        ).annotate(
-            total_expenses=Sum('budget__budgetuser__user__transaction__expense_amount')
-        ).values('category__name', 'allocated_amount', 'total_expenses')
+    def find(cls, project: Project) -> list["BudgetCategory"]:
+        return cls.objects.filter(project=project)

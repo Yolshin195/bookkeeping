@@ -5,17 +5,18 @@ from .models import Transaction, Category, Account
 class ExpenseTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['category', 'expense_account', 'expense_amount']
+        fields = ['category', 'expense_account', 'expense_amount', 'comment']
 
-    def __init__(self, *args, user=None, **kwargs):
+    def __init__(self, *args, project=None, **kwargs):
         super(ExpenseTransactionForm, self).__init__(*args, **kwargs)
         self.title = "Add Expense"
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
         self.fields['expense_account'].widget.attrs.update({'class': 'form-select'})
         self.fields['expense_amount'].widget.attrs.update({'class': 'form-control'})
+        self.fields['comment'].widget.attrs.update({'class': 'form-control'})
 
-        self.fields['category'].queryset = Category.objects.filter(owner=user)
-        self.fields['expense_account'].queryset = Account.objects.filter(owner=user)
+        self.fields['category'].queryset = Category.objects.filter(project=project)
+        self.fields['expense_account'].queryset = Account.objects.filter(project=project)
 
 
 class IncomeTransactionForm(forms.ModelForm):
@@ -23,7 +24,7 @@ class IncomeTransactionForm(forms.ModelForm):
         model = Transaction
         fields = ['category', 'income_account', 'income_amount', 'comment']
 
-    def __init__(self, *args, user=None, **kwargs):
+    def __init__(self, *args, project=None, **kwargs):
         super(IncomeTransactionForm, self).__init__(*args, **kwargs)
         self.title = "Add Income"
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
@@ -31,5 +32,5 @@ class IncomeTransactionForm(forms.ModelForm):
         self.fields['income_amount'].widget.attrs.update({'class': 'form-control'})
         self.fields['comment'].widget.attrs.update({'class': 'form-control'})
 
-        self.fields['category'].queryset = Category.objects.filter(owner=user)
-        self.fields['income_account'].queryset = Account.objects.filter(owner=user)
+        self.fields['category'].queryset = Category.objects.filter(project=project)
+        self.fields['income_account'].queryset = Account.objects.filter(project=project)

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .forms import ExpenseTransactionForm, IncomeTransactionForm
-from .models import Transaction, TransactionTypeEnum, TransactionType
+from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 
 
@@ -41,30 +41,36 @@ def index(request):
 
 @login_required
 def create_transaction(request):
+    project = ProjectUser.find_project_by_user(request.user)
+
     if request.method == 'POST':
-        form = ExpenseTransactionForm(request.POST, user=request.user)
+        form = ExpenseTransactionForm(request.POST, project=project)
         if form.is_valid():
             form.instance.owner = request.user
+            form.instance.project = project
             form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
             form.save()  # Сохранение новой транзакции в базе данных
             return redirect('/')  # Перенаправление после успешного создания
     else:
-        form = ExpenseTransactionForm(user=request.user)
+        form = ExpenseTransactionForm(project=project)
 
     return render(request, 'transactions/create_transaction.html', {'form': form})
 
 
 @login_required
 def create_income_transaction(request):
+    project = ProjectUser.find_project_by_user(request.user)
+
     if request.method == 'POST':
-        form = IncomeTransactionForm(request.POST, user=request.user)
+        form = IncomeTransactionForm(request.POST, project=project)
         if form.is_valid():
             form.instance.owner = request.user
+            form.instance.project = project
             form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
             form.save()  # Сохранение новой транзакции в базе данных
             return redirect('/')  # Перенаправление после успешного создания
     else:
-        form = IncomeTransactionForm(user=request.user)
+        form = IncomeTransactionForm(project=project)
 
     return render(request, 'transactions/create_transaction.html', {'form': form})
 
