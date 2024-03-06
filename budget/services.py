@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_DOWN
-from typing import Unpack
 
 from django.db.models import Sum, DecimalField
 
