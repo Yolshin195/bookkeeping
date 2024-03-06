@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_DOWN
+from typing import Unpack
 
 from django.db.models import Sum, DecimalField
 
@@ -15,12 +16,26 @@ class BudgetCategoryExpense:
     spent: Decimal
 
 
-def get_categories(project: Project) -> list[BudgetCategoryExpense]:
-    budget_category_set = BudgetCategory.objects.filter(project=project).values(
+@dataclass
+class Filter:
+    project: Project
+    month: int
+    year: int
+
+
+def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:
+    budget_category_set = BudgetCategory.objects.filter(
+        project=filter_categories.project
+    ).values(
         "category__code", "category__name", "allocated_amount"
     )
     expense = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
-    expense_transactions = Transaction.objects.filter(type=expense, project=project)
+    expense_transactions = Transaction.objects.filter(
+        type=expense,
+        project=filter_categories.project,
+        created_at__month=filter_categories.month,
+        created_at__year=filter_categories.year
+    )
     grouped_expense_amounts = expense_transactions.values(
         'category__code'
     ).annotate(total_amount=Sum('expense_amount', output_field=DecimalField(max_digits=10, decimal_places=2)))

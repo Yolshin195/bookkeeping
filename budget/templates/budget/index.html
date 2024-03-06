@@ -10,6 +10,16 @@
         </ol>
     </nav>
 
+    <div class="row">
+        <form class="col-md-3 col-sm-12 ms-auto" method="get">
+            <select name="selected_month" class="form-select" aria-label="Default select example" onchange="this.form.submit()">
+                {% for name in month_name %}
+                <option value="{{ forloop.counter }}" {% if forloop.counter == selected_month %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
     {% if categories %}
         {% for category in categories %}
         <div class="card mb-3">
