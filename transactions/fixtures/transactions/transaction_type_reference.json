@@ -6,7 +6,7 @@
       "created_at": "2024-02-24T01:11:00Z",
       "updated_at": "2024-02-24T01:11:00Z",
       "code": "expense",
-      "name": "expense",
+      "name": "expense ↓",
       "description": "expense"
     }
   },
@@ -17,7 +17,7 @@
       "created_at": "2024-02-24T01:11:00Z",
       "updated_at": "2024-02-24T01:11:00Z",
       "code": "income",
-      "name": "income",
+      "name": "income ↑",
       "description": "income"
     }
   },
@@ -28,7 +28,7 @@
       "created_at": "2024-02-24T01:11:00Z",
       "updated_at": "2024-02-24T01:11:00Z",
       "code": "exchange",
-      "name": "exchange",
+      "name": "exchange ⇅",
       "description": "Currency exchange"
     }
   }
