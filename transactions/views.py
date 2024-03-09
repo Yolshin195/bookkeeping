@@ -4,7 +4,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .forms import ExpenseTransactionForm, IncomeTransactionForm
+from .forms import ExpenseTransactionForm, IncomeTransactionForm, TransferTransactionForm
 from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 
@@ -71,6 +71,24 @@ def create_income_transaction(request):
             return redirect('/')  # Перенаправление после успешного создания
     else:
         form = IncomeTransactionForm(project=project)
+
+    return render(request, 'transactions/create_transaction.html', {'form': form})
+
+
+@login_required
+def create_transfer_transaction(request):
+    project = ProjectUser.find_project_by_user(request.user)
+
+    if request.method == 'POST':
+        form = TransferTransactionForm(request.POST, project=project)
+        if form.is_valid():
+            form.instance.owner = request.user
+            form.instance.project = project
+            form.instance.type = TransactionType.find_by_code(TransactionTypeEnum.EXCHANGE.value)
+            form.save()  # Сохранение новой транзакции в базе данных
+            return redirect('/')  # Перенаправление после успешного создания
+    else:
+        form = TransferTransactionForm(project=project)
 
     return render(request, 'transactions/create_transaction.html', {'form': form})
 

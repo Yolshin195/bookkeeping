@@ -12,8 +12,9 @@
 
     <div class="row">
 
-        <div class="btn-group mb-3 col-md-3 col-sm-12" role="group" aria-label="Basic outlined example">
+        <div class="btn-group mb-3 col-md-4 col-sm-12" role="group" aria-label="Basic outlined example">
             <a href="{% url 'create' %}" class="btn btn-outline-primary">Add expenses</a>
+            <a href="{% url 'create_transfer_transaction' %}" class="btn btn-outline-primary">transfer</a>
             <a href="{% url 'create_income_transaction' %}" class="btn btn-outline-primary">Add income</a>
         </div>
         <form class="col-md-3 col-sm-12 ms-auto" method="get">
