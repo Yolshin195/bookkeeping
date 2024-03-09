@@ -1,5 +1,35 @@
+import calendar
+
 from django import forms
 from .models import Transaction, Category, Account
+
+
+class TransactionFilterForm(forms.Form):
+    account = forms.ChoiceField(choices=[], required=False)
+    month = forms.ChoiceField(choices=[], required=False)
+
+    def __init__(self, *args, project=None, selected_account=None, selected_month=None, **kwargs):
+        super(TransactionFilterForm, self).__init__(*args, **kwargs)
+        self.fields['account'].choices = self.choices_account(project)
+        self.fields['month'].choices = self.choices_month()
+        self.fields['account'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
+        self.fields['month'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
+
+        if selected_month:
+            self.fields['month'].initial = selected_month
+
+        if selected_account:
+            self.fields['account'].initial = selected_account
+
+    @staticmethod
+    def choices_month():
+        return [(i, m) for i, m, in enumerate(calendar.month_name)]
+
+    @staticmethod
+    def choices_account(project=None):
+        if project:
+            return [(account.id, account.name) for account in Account.objects.filter(project=project)]
+        return []
 
 
 class ExpenseTransactionForm(forms.ModelForm):
