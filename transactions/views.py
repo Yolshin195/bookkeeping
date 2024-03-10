@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .forms import ExpenseTransactionForm, IncomeTransactionForm, TransferTransactionForm, TransactionFilterForm
-from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser
+from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 
 
@@ -23,11 +23,10 @@ def home(request):
 @login_required
 def index(request):
     current_date = datetime.datetime.now()
-    current_year = current_date.year
-    selected_month = int(request.GET.get("month", default=current_date.month))
-    selected_account = request.GET.get("account", default=None)
-
     project = ProjectUser.find_project_by_user(request.user)
+    selected_month = int(request.GET.get("month", default=current_date.month))
+    selected_account = request.GET.get("account", default=Account.get_default_id(project))
+
     filter_form = TransactionFilterForm(project=project,
                                         selected_account=selected_account,
                                         selected_month=selected_month)
@@ -35,7 +34,7 @@ def index(request):
     latest_transaction_list = Transaction.objects.filter(
         project=project,
         created_at__month=selected_month,
-        created_at__year=current_year
+        created_at__year=current_date.year
     )
     if selected_account:
         latest_transaction_list = latest_transaction_list.filter(
@@ -45,8 +44,6 @@ def index(request):
 
     context = {
         "filter_form": filter_form,
-        "month_name": calendar.month_name[1:],
-        "selected_month": selected_month,
         "latest_transaction_list": latest_transaction_list
     }
     return render(request, "transactions/index.html", context)

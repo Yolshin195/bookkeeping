@@ -81,6 +81,27 @@ class Category(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
 
 class Account(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    is_default = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.is_default and self.project:
+            # Убедитесь, что только один аккаунт является дефолтным
+            Account.objects.filter(project=self.project, is_default=True).update(is_default=False)
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_default(cls, project: Optional[Project]) -> Optional["Account"]:
+        if project is None:
+            return None
+        try:
+            return cls.objects.get(project=project, is_default=True)
+        except Account.DoesNotExist:
+            return None
+
+    @classmethod
+    def get_default_id(cls, project) -> Optional[uuid.UUID]:
+        account = cls.get_default(project)
+        return account.id if account else None
 
 
 class TransactionType(BaseReferenceModel):

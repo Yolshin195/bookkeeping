@@ -10,11 +10,11 @@
         </ol>
     </nav>
 
-    <div>
-        <form method="get">
-            {{ filter_form.as_p }}
-        </form>
-    </div>
+<!--    <div>-->
+<!--        <form method="get">-->
+<!--            {{ filter_form.as_p }}-->
+<!--        </form>-->
+<!--    </div>-->
 
     <div class="row">
 
@@ -24,11 +24,7 @@
             <a href="{% url 'create_income_transaction' %}" class="btn btn-outline-primary">Add income</a>
         </div>
         <form class="col-md-3 col-sm-12 ms-auto" method="get">
-            <select name="selected_month" class="form-select" aria-label="Default select example" onchange="this.form.submit()">
-                {% for name in month_name %}
-                <option value="{{ forloop.counter }}" {% if forloop.counter == selected_month %}selected{% endif %}>{{ name }}</option>
-                {% endfor %}
-            </select>
+            {{ filter_form.as_p }}
         </form>
     </div>
 
