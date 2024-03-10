@@ -5,25 +5,32 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from budget.services import get_categories, Filter
-from transactions.models import ProjectUser
+from transactions.forms import TransactionFilterForm
+from transactions.models import ProjectUser, Account
 
 
 @login_required
 def index(request):
     current_date = datetime.now()
-    selected_month = int(request.GET.get("selected_month", default=current_date.month))
     current_year = current_date.year
 
     project = ProjectUser.find_project_by_user(request.user)
+    selected_month = int(request.GET.get("month", default=current_date.month))
+    selected_account = request.GET.get("account", default=Account.get_default_id(project))
+
+    filter_form = TransactionFilterForm(project=project,
+                                        selected_account=selected_account,
+                                        selected_month=selected_month)
+
     categories = get_categories(Filter(
         project=project,
+        account_id=selected_account,
         month=selected_month,
         year=current_year
     ))
 
     context = {
-        "month_name": calendar.month_name[1:],
-        "selected_month": selected_month,
+        "filter_form": filter_form,
         "categories": categories
     }
     return render(request, "budget/index.html", context)

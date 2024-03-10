@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from decimal import Decimal, ROUND_DOWN
+from uuid import UUID
 
-from django.db.models import Sum, DecimalField
+from django.db.models import Sum, DecimalField, Q
 
 from budget.models import BudgetCategory
 from transactions.models import Project, TransactionType, TransactionTypeEnum, Transaction
@@ -18,6 +19,7 @@ class BudgetCategoryExpense:
 @dataclass
 class Filter:
     project: Project
+    account_id: UUID
     month: int
     year: int
 
@@ -35,6 +37,10 @@ def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:
         created_at__month=filter_categories.month,
         created_at__year=filter_categories.year
     )
+    if filter_categories.account_id:
+        expense_transactions = expense_transactions.filter(
+            Q(expense_account_id=filter_categories.account_id) | Q(income_account_id=filter_categories.account_id)
+        )
     grouped_expense_amounts = expense_transactions.values(
         'category__code'
     ).annotate(total_amount=Sum('expense_amount', output_field=DecimalField(max_digits=10, decimal_places=2)))
