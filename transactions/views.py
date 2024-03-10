@@ -1,7 +1,7 @@
 import calendar
 import datetime
 
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -43,8 +43,9 @@ def index(request):
         )
     latest_transaction_list = latest_transaction.order_by("-created_at")
 
+    expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     transaction_sum = latest_transaction.aggregate(
-        total_expenses=Sum('expense_amount'),
+        total_expenses=Sum(Case(When(type=expense_type, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
         total_income=Sum('income_amount')
     )
 
