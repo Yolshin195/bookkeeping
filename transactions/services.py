@@ -4,9 +4,11 @@ from decimal import Decimal, ROUND_HALF_UP
 
 @dataclass
 class Balance:
-    expense: int
-    balance: int
-    income: int
+    expense: Decimal
+    expense_percent: int
+    balance: Decimal
+    balance_percent: int
+    income: Decimal
 
     @classmethod
     def build(cls, data: dict) -> "Balance":
@@ -16,9 +18,11 @@ class Balance:
         total = income
 
         return Balance(
-            expense=cls.get_percent(expense, total),
-            balance=cls.get_percent(balance, total),
-            income=cls.get_percent(income, total)
+            expense=expense,
+            balance=balance,
+            income=income,
+            expense_percent=cls.get_percent(expense, total),
+            balance_percent=cls.get_percent(balance, total)
         )
 
     @staticmethod
