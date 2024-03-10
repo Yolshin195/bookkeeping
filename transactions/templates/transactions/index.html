@@ -10,18 +10,14 @@
         </ol>
     </nav>
 
-<!--    <div>-->
-<!--        <form method="get">-->
-<!--            {{ filter_form.as_p }}-->
-<!--        </form>-->
-<!--    </div>-->
+    <div class="row align-items-end">
 
-    <div class="row">
-
-        <div class="btn-group mb-3 col-md-4 col-sm-12" role="group" aria-label="Basic outlined example">
-            <a href="{% url 'create' %}" class="btn btn-outline-primary">Add expenses</a>
-            <a href="{% url 'create_transfer_transaction' %}" class="btn btn-outline-primary">transfer</a>
-            <a href="{% url 'create_income_transaction' %}" class="btn btn-outline-primary">Add income</a>
+        <div class="mb-3 col-md-4 col-sm-12" role="group" aria-label="Basic outlined example">
+            <div class="btn-group">
+                <a href="{% url 'create' %}" class="btn btn-outline-primary">Add expenses</a>
+                <a href="{% url 'create_transfer_transaction' %}" class="btn btn-outline-primary">transfer</a>
+                <a href="{% url 'create_income_transaction' %}" class="btn btn-outline-primary">Add income</a>
+            </div>
         </div>
         <form class="col-md-3 col-sm-12 ms-auto" method="get">
             {{ filter_form.as_p }}
