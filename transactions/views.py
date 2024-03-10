@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import ExpenseTransactionForm, IncomeTransactionForm, TransferTransactionForm, TransactionFilterForm
 from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
+from .services import Balance
 
 
 def home(request):
@@ -50,7 +51,8 @@ def index(request):
     context = {
         "filter_form": filter_form,
         "latest_transaction_list": latest_transaction_list,
-        "transaction_sum": transaction_sum
+        "transaction_sum": transaction_sum,
+        "balance": Balance.build(transaction_sum)
     }
     return render(request, "transactions/index.html", context)
 
