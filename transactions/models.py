@@ -73,6 +73,7 @@ class ProjectUser(BaseEntity, ProjectLink):
 
 class Currency(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    symbol = models.CharField(max_length=8)
 
 
 class Category(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
