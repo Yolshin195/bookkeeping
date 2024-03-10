@@ -11,7 +11,6 @@
     </nav>
 
     <div class="row align-items-end">
-
         <div class="mb-3 col-md-4 col-sm-12" role="group" aria-label="Basic outlined example">
             <div class="btn-group">
                 <a href="{% url 'create' %}" class="btn btn-outline-primary">Add expenses</a>
@@ -25,39 +24,60 @@
     </div>
 
     {% if latest_transaction_list %}
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">type</th>
-                        <th scope="col">category</th>
-                        <th scope="col">expense_account</th>
-                        <th scope="col">expense_amount</th>
-                        <th scope="col">income_account</th>
-                        <th scope="col">income_amount</th>
-                        <th scope="col">comment</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for transaction in latest_transaction_list %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ transaction.type }}</td>
-                        <td>{{ transaction.category }}</td>
-                        <td>{{ transaction.expense_account }}</td>
-                        <td>{{ transaction.expense_amount }}</td>
-                        <td>{{ transaction.income_account }}</td>
-                        <td>{{ transaction.income_amount }}</td>
-                        <td>{{ transaction.comment }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <div class="progress-stacked">
+        <div class="progress" role="progressbar" aria-label="Segment one" aria-valuenow="15" aria-valuemin="0"
+             aria-valuemax="100" style="width: 25%">
+            <div class="progress-bar bg-danger">25%</div>
         </div>
+        <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="30" aria-valuemin="0"
+             aria-valuemax="100" style="width: 30%">
+            <div class="progress-bar bg-success">30%</div>
+        </div>
+        <div class="progress" role="progressbar" aria-label="Segment three" aria-valuenow="20" aria-valuemin="0"
+             aria-valuemax="100" style="width: 45%">
+            <div class="progress-bar bg-info">45%</div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">type</th>
+                <th scope="col">category</th>
+                <th scope="col">expense_account</th>
+                <th scope="col">expense_amount</th>
+                <th scope="col">income_account</th>
+                <th scope="col">income_amount</th>
+                <th scope="col">comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in latest_transaction_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.category }}</td>
+                <td>{{ transaction.expense_account }}</td>
+                <td>{{ transaction.expense_amount }}</td>
+                <td>{{ transaction.income_account }}</td>
+                <td>{{ transaction.income_amount }}</td>
+                <td>{{ transaction.comment }}</td>
+            </tr>
+            {% endfor %}
+            {% if transaction_sum %}
+            <tr>
+                <th scope="row">Sum</th>
+                <td colspan="3"></td>
+                <td>{{ transaction_sum.total_expenses }}</td>
+                <td></td>
+                <td>{{ transaction_sum.total_income }}</td>
+                <td></td>
+            </tr>
+            {% endif %}
+            </tbody>
+        </table>
     </div>
     {% else %}
     <p>No polls are available.</p>

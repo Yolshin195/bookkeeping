@@ -1,7 +1,7 @@
 import calendar
 import datetime
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -31,20 +31,26 @@ def index(request):
                                         selected_account=selected_account,
                                         selected_month=selected_month)
 
-    latest_transaction_list = Transaction.objects.filter(
+    latest_transaction = Transaction.objects.filter(
         project=project,
         created_at__month=selected_month,
         created_at__year=current_date.year
     )
     if selected_account:
-        latest_transaction_list = latest_transaction_list.filter(
+        latest_transaction = latest_transaction.filter(
             Q(expense_account_id=selected_account) | Q(income_account_id=selected_account)
         )
-    latest_transaction_list = latest_transaction_list.order_by("-created_at")
+    latest_transaction_list = latest_transaction.order_by("-created_at")
+
+    transaction_sum = latest_transaction.aggregate(
+        total_expenses=Sum('expense_amount'),
+        total_income=Sum('income_amount')
+    )
 
     context = {
         "filter_form": filter_form,
-        "latest_transaction_list": latest_transaction_list
+        "latest_transaction_list": latest_transaction_list,
+        "transaction_sum": transaction_sum
     }
     return render(request, "transactions/index.html", context)
 
