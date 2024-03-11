@@ -35,7 +35,7 @@ class TransactionFilterForm(forms.Form):
 class ExpenseTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['category', 'expense_account', 'expense_amount', 'comment']
+        fields = ['expense_account', 'category', 'expense_amount', 'comment']
 
     def __init__(self, *args, project=None, **kwargs):
         super(ExpenseTransactionForm, self).__init__(*args, **kwargs)
@@ -47,6 +47,7 @@ class ExpenseTransactionForm(forms.ModelForm):
 
         self.fields['category'].queryset = Category.objects.filter(project=project)
         self.fields['expense_account'].queryset = Account.objects.filter(project=project)
+        self.fields['expense_account'].initial = Account.get_default(project)
 
 
 class IncomeTransactionForm(forms.ModelForm):
