@@ -1,7 +1,42 @@
 import calendar
 
 from django import forms
-from .models import Transaction, Category, Account
+
+from .models import Transaction, Category, Account, Currency
+
+
+def get_reference_form(reference_model=None, reference_fields=None):
+    if reference_fields is None:
+        reference_fields = []
+
+    class ReferenceForm(forms.ModelForm):
+
+        class Meta:
+            model = reference_model
+            fields = ["code", "name", "description", *reference_fields]
+
+        def __init__(self, *args, **kwargs):
+            super(ReferenceForm, self).__init__(*args, **kwargs)
+            for field in self.fields:
+                self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+    return ReferenceForm
+
+
+reference_form_list = {
+    "Currency": {
+        "ReferenceForm": get_reference_form(reference_model=Currency),
+        "Model": Currency
+    },
+    "Category": {
+        "ReferenceForm": get_reference_form(reference_model=Category),
+        "Model": Category
+    },
+    "Account": {
+        "ReferenceForm": get_reference_form(reference_model=Account),
+        "Model": Account
+    },
+}
 
 
 class TransactionFilterForm(forms.Form):

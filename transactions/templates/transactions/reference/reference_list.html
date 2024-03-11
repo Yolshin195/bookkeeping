@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container mt-3">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="{% url 'reference_select' %}">Reference</a></li>
+            <li class="breadcrumb-item active" aria-current="page">List</li>
+        </ol>
+    </nav>
+
+    <div class="btn-group mb-3">
+        <a href="{% url 'reference_edit' %}?form_name={{ form_name }}" class="btn btn-outline-primary">Create</a>
+    </div>
+
+    <ul class="list-group">
+        {% for reference in reference_list %}
+        <li class="list-group-item">{{ reference.code }}</li>
+        {% endfor %}
+    </ul>
+
+</main>
+{% endblock %}

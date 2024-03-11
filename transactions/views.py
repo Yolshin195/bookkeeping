@@ -5,10 +5,16 @@ from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .forms import ExpenseTransactionForm, IncomeTransactionForm, TransferTransactionForm, TransactionFilterForm
 from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 from .services import Balance
+from .forms import (
+    ExpenseTransactionForm,
+    IncomeTransactionForm,
+    TransferTransactionForm,
+    TransactionFilterForm,
+    reference_form_list
+)
 
 
 def home(request):
@@ -115,3 +121,42 @@ def create_transfer_transaction(request):
 @login_required
 def settings(request):
     return render(request, 'transactions/settings.html')
+
+
+@login_required
+def reference_edit(request):
+    form_name = request.GET.get('form_name')
+    if form_name is None:
+        return redirect('reference_select')
+    reference_form = reference_form_list.get(form_name)
+    project = ProjectUser.find_project_by_user(request.user)
+
+    if request.method == 'POST':
+        form = reference_form["ReferenceForm"](request.POST)
+        if form.is_valid():
+            form.instance.owner = request.user
+            form.instance.project = project
+            form.save()
+            return redirect('/')
+    else:
+        form = reference_form["ReferenceForm"]()
+
+    return render(request, 'transactions/reference/reference_edit.html', {'form': form, 'form_name': form_name})
+
+
+@login_required
+def reference_list(request):
+    form_name = request.GET.get('form_name', None)
+    if form_name is None:
+        return redirect('reference_select')
+    reference_form = reference_form_list.get(form_name)
+    references = reference_form["Model"].objects.filter(
+        project=ProjectUser.find_project_by_user(request.user)
+    )
+    return render(request, 'transactions/reference/reference_list.html', {'reference_list': references, "form_name": form_name})
+
+
+@login_required
+def reference_select(request):
+    references = list(reference_form_list.keys())
+    return render(request, 'transactions/reference/reference_select.html', {'reference_list': references})

@@ -9,5 +9,8 @@ urlpatterns = [
     path("transaction/create/expense", views.create_transaction, name="create"),
     path("transaction/create/income", views.create_income_transaction, name="create_income_transaction"),
     path("transaction/create/transfer", create_transfer_transaction, name="create_transfer_transaction"),
-    path("settings", views.settings, name="settings")
+    path("settings", views.settings, name="settings"),
+    path('reference/edit', views.reference_edit, name="reference_edit"),
+    path('reference/list', views.reference_list, name="reference_list"),
+    path('reference/select', views.reference_select, name="reference_select"),
 ]

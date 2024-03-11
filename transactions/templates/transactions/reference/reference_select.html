@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container mt-3">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reference</li>
+        </ol>
+    </nav>
+
+    <div class="list-group">
+        {% for reference in reference_list %}
+          <a href="{% url 'reference_list' %}?form_name={{reference}}" class="list-group-item list-group-item-action" aria-current="true">
+            {{ reference }}
+          </a>
+        {% endfor %}
+    </div>
+
+</main>
+{% endblock %}
