@@ -31,21 +31,20 @@ def get_reference_form(reference_model=None, reference_fields=None, attrs=None):
 
 reference_form_list = {
     "Currency": {
+        "Model": Currency,
         "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"]),
-        "Model": Currency
     },
     "Category": {
+        "Model": Category,
         "ReferenceForm": get_reference_form(reference_model=Category),
-        "Model": Category
     },
     "Account": {
-        "ReferenceForm": get_reference_form(reference_model=Account,
-                                            reference_fields=["currency", "is_default"],
+        "Model": Account,
+        "ReferenceForm": get_reference_form(reference_model=Account, reference_fields=["currency", "is_default"],
                                             attrs={
                                                 "currency": {'class': 'form-select'},
                                                 "is_default": {'class': 'form-check-input'}
                                             }),
-        "Model": Account
     },
 }
 
