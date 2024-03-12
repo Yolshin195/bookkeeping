@@ -5,9 +5,15 @@ from django import forms
 from .models import Transaction, Category, Account, Currency
 
 
-def get_reference_form(reference_model=None, reference_fields=None):
+def get_reference_form(reference_model=None, reference_fields=None, attrs=None):
     if reference_fields is None:
         reference_fields = []
+
+    if attrs is None:
+        attrs = {}
+
+    if "description" not in attrs:
+        attrs["description"] = {'class': 'form-control', 'rows': 5}
 
     class ReferenceForm(forms.ModelForm):
 
@@ -18,14 +24,14 @@ def get_reference_form(reference_model=None, reference_fields=None):
         def __init__(self, *args, **kwargs):
             super(ReferenceForm, self).__init__(*args, **kwargs)
             for field in self.fields:
-                self.fields[field].widget.attrs.update({'class': 'form-control'})
+                self.fields[field].widget.attrs.update(attrs.get(field, {'class': 'form-control'}))
 
     return ReferenceForm
 
 
 reference_form_list = {
     "Currency": {
-        "ReferenceForm": get_reference_form(reference_model=Currency),
+        "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"]),
         "Model": Currency
     },
     "Category": {
@@ -33,7 +39,12 @@ reference_form_list = {
         "Model": Category
     },
     "Account": {
-        "ReferenceForm": get_reference_form(reference_model=Account),
+        "ReferenceForm": get_reference_form(reference_model=Account,
+                                            reference_fields=["currency", "is_default"],
+                                            attrs={
+                                                "currency": {'class': 'form-select'},
+                                                "is_default": {'class': 'form-check-input'}
+                                            }),
         "Model": Account
     },
 }
