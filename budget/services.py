@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from decimal import Decimal, ROUND_DOWN
 from uuid import UUID
 
-from django.db.models import Sum, DecimalField, Q
+from django.db.models import Sum, DecimalField, Q, Value
 
-from budget.models import BudgetCategory
+from budget.models import BudgetCategory, Budget
 from transactions.models import Project, TransactionType, TransactionTypeEnum, Transaction
 
 
@@ -22,6 +22,25 @@ class Filter:
     account_id: UUID
     month: int
     year: int
+
+
+def get_root_category(filter_categories: Filter) -> BudgetCategoryExpense:
+    budget = Budget.objects.get(project=filter_categories.project, is_default=True)
+    total_expenses = Transaction.objects.filter(
+        project=filter_categories.project,
+        expense_account_id=filter_categories.account_id,
+        created_at__month=filter_categories.month,
+        created_at__year=filter_categories.year
+    ).aggregate(
+        total_amount=Sum('expense_amount', default=Value(0), output_field=DecimalField(max_digits=10, decimal_places=2))
+    )
+
+    return BudgetCategoryExpense(
+        category__name="Budget",
+        allocated_amount=budget.allocated_amount,
+        total_expenses=total_expenses.get("total_amount"),
+        spent=(total_expenses.get("total_amount") / budget.allocated_amount * 100).quantize(Decimal('1'), rounding=ROUND_DOWN)
+    )
 
 
 def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:

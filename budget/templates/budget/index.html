@@ -16,25 +16,40 @@
         </form>
     </div>
 
-    {% if categories %}
-        {% for category in categories %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">
-                    {{ category.category__name }}
-                </h5>
-                <p class="card-text">{{category.allocated_amount}}</p>
-                <p class="card-text">{{category.total_expenses}}</p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ category.spent }}" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar" style="width: {{ category.spent }}%">{{ category.spent }}%</div>
-                </div>
+    {% if budget %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Budget</h5>
+            <p class="card-text">{{budget.allocated_amount}}</p>
+            <p class="card-text">{{budget.total_expenses}}</p>
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ budget.spent }}"
+                 aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: {{ budget.spent }}%">{{ budget.spent }}%</div>
             </div>
         </div>
-        {% endfor %}
-    {% else %}
-        <div class="alert alert-light" role="alert">
-          No categories found.
+    </div>
+    {% endif %}
+
+    {% if categories %}
+    {% for category in categories %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ category.category__name }}
+            </h5>
+            <p class="card-text">{{category.allocated_amount}}</p>
+            <p class="card-text">{{category.total_expenses}}</p>
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ category.spent }}"
+                 aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: {{ category.spent }}%">{{ category.spent }}%</div>
+            </div>
         </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-light" role="alert">
+        No categories found.
+    </div>
     {% endif %}
 </main>
 {% endblock %}

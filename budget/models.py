@@ -18,7 +18,14 @@ class BaseEntity(models.Model):
 
 
 class Budget(BaseEntity, ProjectLink):
-    pass
+    allocated_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    is_default = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.is_default and self.project:
+            # Убедитесь, что только один аккаунт является дефолтным
+            Budget.objects.filter(project=self.project, is_default=True).update(is_default=False)
+        super().save(*args, **kwargs)
 
 
 class BudgetCategory(BaseEntity, ProjectLink):

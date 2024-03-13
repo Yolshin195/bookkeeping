@@ -4,7 +4,8 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from budget.services import get_categories, Filter
+from budget.models import Budget
+from budget.services import get_categories, Filter, get_root_category
 from transactions.forms import TransactionFilterForm
 from transactions.models import ProjectUser, Account
 
@@ -22,14 +23,17 @@ def index(request):
                                         selected_account=selected_account,
                                         selected_month=selected_month)
 
-    categories = get_categories(Filter(
+    budget_filter = Filter(
         project=project,
         account_id=selected_account,
         month=selected_month,
         year=current_year
-    ))
+    )
+    root_category = get_root_category(budget_filter)
+    categories = get_categories(budget_filter)
 
     context = {
+        "budget": root_category,
         "filter_form": filter_form,
         "categories": categories
     }
