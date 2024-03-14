@@ -27,7 +27,7 @@ class Balance:
 
     @staticmethod
     def get(data: dict, key: str) -> Decimal:
-        return data.get(key, Decimal("0.00"))
+        return data.get(key) or Decimal("0.00")
 
     @staticmethod
     def get_percent(value: Decimal, total: Decimal) -> int:

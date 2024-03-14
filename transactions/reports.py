@@ -25,7 +25,6 @@ def get_balance(owner: "User" = None):
     start_date = datetime(end_date.year, end_date.month, 1, tzinfo=default_timezone)
     project = ProjectUser.find_project_by_user(owner)
     account_id = Account.get_default_id(project)
-    expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     result = Transaction.objects.filter(
         project=project,
         created_at__gte=start_date,  # Учитываем только транзакции, созданные после начальной даты
@@ -33,8 +32,8 @@ def get_balance(owner: "User" = None):
     ).filter(
         Q(expense_account_id=account_id) | Q(income_account_id=account_id)
     ).aggregate(
-        total_expenses=Sum(Case(When(type=expense_type, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
-        total_income=Sum('income_amount'),
+        total_expenses=Sum(Case(When(expense_account_id=account_id, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
+        total_income=Sum(Case(When(income_account_id=account_id, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
     )
     # Получаем значения суммы расходов и суммы доходов из результата агрегации
     total_expenses = result['total_expenses'] or 0
