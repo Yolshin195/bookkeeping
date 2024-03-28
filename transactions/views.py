@@ -33,10 +33,12 @@ def index(request):
     project = ProjectUser.find_project_by_user(request.user)
     selected_month = int(request.GET.get("month", default=current_date.month))
     selected_account = request.GET.get("account", default=Account.get_default_id(project))
+    selected_owner = request.GET.get("owner", default=None)
 
     filter_form = TransactionFilterForm(project=project,
                                         selected_account=selected_account,
-                                        selected_month=selected_month)
+                                        selected_month=selected_month,
+                                        selected_owner=selected_owner)
 
     latest_transaction = Transaction.objects.filter(
         project=project,
@@ -46,6 +48,10 @@ def index(request):
     if selected_account:
         latest_transaction = latest_transaction.filter(
             Q(expense_account_id=selected_account) | Q(income_account_id=selected_account)
+        )
+    if selected_owner:
+        latest_transaction = latest_transaction.filter(
+            owner__id=selected_owner
         )
     latest_transaction_list = latest_transaction.order_by("-created_at")
 

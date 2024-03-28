@@ -2,7 +2,7 @@ import calendar
 
 from django import forms
 
-from .models import Transaction, Category, Account, Currency
+from .models import Transaction, Category, Account, Currency, ProjectUser
 
 
 def get_reference_form(reference_model=None, reference_fields=None, attrs=None):
@@ -52,19 +52,25 @@ reference_form_list = {
 class TransactionFilterForm(forms.Form):
     account = forms.ChoiceField(choices=[], required=False)
     month = forms.ChoiceField(choices=[], required=False)
+    owner = forms.ChoiceField(choices=[])
 
-    def __init__(self, *args, project=None, selected_account=None, selected_month=None, **kwargs):
+    def __init__(self, *args, project=None, selected_account=None, selected_month=None, selected_owner=None, **kwargs):
         super(TransactionFilterForm, self).__init__(*args, **kwargs)
         self.fields['account'].choices = self.choices_account(project)
         self.fields['month'].choices = self.choices_month()
+        self.fields['owner'].choices = self.choices_owner(project)
         self.fields['account'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
         self.fields['month'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
+        self.fields['owner'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
 
         if selected_month:
             self.fields['month'].initial = selected_month
 
         if selected_account:
             self.fields['account'].initial = selected_account
+
+        if selected_owner:
+            self.fields['owner'].initial = selected_owner
 
     @staticmethod
     def choices_month():
@@ -76,6 +82,13 @@ class TransactionFilterForm(forms.Form):
             return [(account.id, account.name) for account in Account.objects.filter(project=project)]
         return []
 
+    @staticmethod
+    def choices_owner(project=None):
+        choices = [(None, "All")]
+        if project:
+            choices.extend(ProjectUser.objects.filter(project=project).values_list("user__id", "user__username"))
+        return choices
+
 
 class ExpenseTransactionForm(forms.ModelForm):
     class Meta:
@@ -85,9 +98,9 @@ class ExpenseTransactionForm(forms.ModelForm):
     def __init__(self, *args, project=None, **kwargs):
         super(ExpenseTransactionForm, self).__init__(*args, **kwargs)
         self.title = "Add Expense"
-        self.fields['category'].widget.attrs.update({'class': 'form-select'})
-        self.fields['expense_account'].widget.attrs.update({'class': 'form-select'})
-        self.fields['expense_amount'].widget.attrs.update({'class': 'form-control'})
+        self.fields['category'].widget.attrs.update({'class': 'form-select col'})
+        self.fields['expense_account'].widget.attrs.update({'class': 'form-select col'})
+        self.fields['expense_amount'].widget.attrs.update({'class': 'form-control col'})
         self.fields['comment'].widget.attrs.update({'class': 'form-control', 'rows': 5})
 
         self.fields['category'].queryset = Category.objects.filter(project=project)
@@ -98,7 +111,7 @@ class ExpenseTransactionForm(forms.ModelForm):
 class IncomeTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['category', 'income_account', 'income_amount', 'comment']
+        fields = ['income_account', 'category', 'income_amount', 'comment']
 
     def __init__(self, *args, project=None, **kwargs):
         super(IncomeTransactionForm, self).__init__(*args, **kwargs)

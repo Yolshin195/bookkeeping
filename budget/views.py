@@ -18,14 +18,17 @@ def index(request):
     project = ProjectUser.find_project_by_user(request.user)
     selected_month = int(request.GET.get("month", default=current_date.month))
     selected_account = request.GET.get("account", default=Account.get_default_id(project))
+    selected_owner = request.GET.get("owner", default=None)
 
     filter_form = TransactionFilterForm(project=project,
                                         selected_account=selected_account,
-                                        selected_month=selected_month)
+                                        selected_month=selected_month,
+                                        selected_owner=selected_owner)
 
     budget_filter = Filter(
         project=project,
         account_id=selected_account,
+        owner_id=selected_owner,
         month=selected_month,
         year=current_year
     )

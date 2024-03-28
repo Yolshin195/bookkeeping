@@ -19,7 +19,8 @@ class BudgetCategoryExpense:
 @dataclass
 class Filter:
     project: Project
-    account_id: UUID
+    account_id: UUID | None
+    owner_id: UUID | None
     month: int
     year: int
 
@@ -59,6 +60,10 @@ def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:
     if filter_categories.account_id:
         expense_transactions = expense_transactions.filter(
             Q(expense_account_id=filter_categories.account_id) | Q(income_account_id=filter_categories.account_id)
+        )
+    if filter_categories.owner_id:
+        expense_transactions = expense_transactions.filter(
+            owner__id=filter_categories.owner_id
         )
     grouped_expense_amounts = expense_transactions.values(
         'category__code'
