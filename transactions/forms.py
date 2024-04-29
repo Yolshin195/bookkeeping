@@ -5,7 +5,7 @@ from django import forms
 from .models import Transaction, Category, Account, Currency, ProjectUser
 
 
-def get_reference_form(reference_model=None, reference_fields=None, attrs=None):
+def get_reference_form(reference_model=None, reference_fields=None, attrs=None, choices=None):
     if reference_fields is None:
         reference_fields = []
 
@@ -21,10 +21,19 @@ def get_reference_form(reference_model=None, reference_fields=None, attrs=None):
             model = reference_model
             fields = ["code", "name", "description", *reference_fields]
 
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args, project=None, **kwargs):
             super(ReferenceForm, self).__init__(*args, **kwargs)
             for field in self.fields:
                 self.fields[field].widget.attrs.update(attrs.get(field, {'class': 'form-control'}))
+                if choices and field in choices:
+                    model, method_name = choices[field]
+                    self.fields[field].choices = getattr(self, method_name)(model, project)
+
+        @staticmethod
+        def choices_project(model, project=None):
+            if project:
+                return [(reference.id, reference.name) for reference in model.objects.filter(project=project)]
+            return []
 
     return ReferenceForm
 
@@ -44,6 +53,9 @@ reference_form_list = {
                                             attrs={
                                                 "currency": {'class': 'form-select'},
                                                 "is_default": {'class': 'form-check-input'}
+                                            },
+                                            choices={
+                                                "currency": (Currency, "choices_project")
                                             }),
     },
 }

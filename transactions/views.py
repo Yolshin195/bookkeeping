@@ -1,4 +1,3 @@
-import calendar
 import datetime
 
 from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
@@ -137,14 +136,14 @@ def reference_edit(request):
     project = ProjectUser.find_project_by_user(request.user)
 
     if request.method == 'POST':
-        form = reference_form["ReferenceForm"](request.POST)
+        form = reference_form["ReferenceForm"](request.POST, project=project)
         if form.is_valid():
             form.instance.owner = request.user
             form.instance.project = project
             form.save()
             return redirect('/')
     else:
-        form = reference_form["ReferenceForm"]()
+        form = reference_form["ReferenceForm"](project=project)
 
     return render(request, 'transactions/reference/reference_edit.html', {'form': form, 'form_name': form_name})
 
