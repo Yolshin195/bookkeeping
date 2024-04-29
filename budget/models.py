@@ -35,6 +35,9 @@ class BaseReferenceModel(BaseEntity):
 
 class ProjectReferenceModel(BaseReferenceModel, ProjectLink):
 
+    def __str__(self):
+        return f'{self.project}: {self.name}'
+
     class Meta:
         abstract = True
         unique_together = (("code", "project"),)

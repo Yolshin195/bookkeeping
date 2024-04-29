@@ -49,7 +49,9 @@ class BaseReferenceModel(BaseEntity):
 
 
 class Project(BaseReferenceModel):
-    pass
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class ProjectLink(models.Model):
@@ -80,6 +82,9 @@ class ProjectReferenceModel(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
         abstract = True
         unique_together = (("code", "project"),)
 
+    def __str__(self):
+        return f'{self.project}: {self.name}'
+
     @classmethod
     def find_by_code_and_project(cls, code, project):
         return cls.objects.get(code=code, project=project)
@@ -88,6 +93,9 @@ class ProjectReferenceModel(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
 class Currency(ProjectReferenceModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     symbol = models.CharField(max_length=8)
+
+    def __str__(self):
+        return f'{self.project.code}: {self.name} {self.symbol}'
 
 
 class Category(ProjectReferenceModel):
