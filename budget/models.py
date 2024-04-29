@@ -17,7 +17,34 @@ class BaseEntity(models.Model):
         return f'{self.id}'
 
 
-class Budget(BaseEntity, ProjectLink):
+class BaseReferenceModel(BaseEntity):
+    code = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return f'{self.code} - {self.name}'
+
+    @classmethod
+    def find_by_code(cls, code):
+        return cls.objects.get(code=code)
+
+
+class ProjectReferenceModel(BaseReferenceModel, ProjectLink):
+
+    class Meta:
+        abstract = True
+        unique_together = (("code", "project"),)
+
+    @classmethod
+    def find_by_code_and_project(cls, code, project):
+        return cls.objects.get(code=code, project=project)
+
+
+class Budget(ProjectReferenceModel):
     allocated_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_default = models.BooleanField(default=False)
 

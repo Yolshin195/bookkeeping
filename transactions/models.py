@@ -25,8 +25,15 @@ class BaseEntity(models.Model):
         return f'{self.id}'
 
 
+class BaseOwnerEntity(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
 class BaseReferenceModel(BaseEntity):
-    code = models.CharField(max_length=20, unique=True)
+    code = models.CharField(max_length=20)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
 
@@ -41,14 +48,7 @@ class BaseReferenceModel(BaseEntity):
         return cls.objects.get(code=code)
 
 
-class BaseOwnerEntity(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        abstract = True
-
-
-class Project(BaseEntity):
+class Project(BaseReferenceModel):
     pass
 
 
@@ -62,6 +62,9 @@ class ProjectLink(models.Model):
 class ProjectUser(BaseEntity, ProjectLink):
     user = models.OneToOneField(User, unique=True, related_name="project_user", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.project}: {self.user}'
+
     @classmethod
     def find_project_by_user(cls, user: User) -> Optional[Project]:
         try:
@@ -71,16 +74,27 @@ class ProjectUser(BaseEntity, ProjectLink):
             return None
 
 
-class Currency(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
+class ProjectReferenceModel(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
+
+    class Meta:
+        abstract = True
+        unique_together = (("code", "project"),)
+
+    @classmethod
+    def find_by_code_and_project(cls, code, project):
+        return cls.objects.get(code=code, project=project)
+
+
+class Currency(ProjectReferenceModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     symbol = models.CharField(max_length=8)
 
 
-class Category(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
+class Category(ProjectReferenceModel):
     pass
 
 
-class Account(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
+class Account(ProjectReferenceModel):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     is_default = models.BooleanField(default=False)
 
