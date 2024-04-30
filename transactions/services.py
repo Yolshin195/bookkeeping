@@ -31,7 +31,7 @@ class Balance:
 
     @staticmethod
     def get_percent(value: Decimal, total: Decimal) -> int:
-        if value == Decimal("0.00"):
+        if value == Decimal("0.00") or total == Decimal("0.00"):
             return 0
 
         percent = (value / total) * Decimal("100")
