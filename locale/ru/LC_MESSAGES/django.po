@@ -199,18 +199,13 @@ msgid "Add income"
 msgstr "Добавить доход"
 
 #: .\transactions\templates\transactions\home.html:43
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "                    In this section you can record your expenses.\n"
-#| "                    "
 msgid ""
 "\n"
 "                    In this section you can indicate your income.\n"
 "                    "
 msgstr ""
 "\n"
-"                    в этом разделе вы можете фиксировать свои расходы.\n"
+"                    В этом разделе вы можете указывать свой доход.\n"
 "                    "
 
 #: .\transactions\templates\transactions\home.html:47

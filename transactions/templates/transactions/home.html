@@ -57,8 +57,11 @@
             <div class="col-md-7">
                 <h2 class="featurette-heading fw-normal lh-1">{% trans 'Balance. ' %}<span
                         class="text-body-secondary">{% trans 'Current month.' %}</span></h2>
-                <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting
-                    prose here.</p>
+                <p class="lead">
+                    {% blocktranslate %}
+                    Some great placeholder content for the first featurette here. Imagine some exciting prose here.
+                    {% endblocktranslate %}
+                </p>
             </div>
             <div class="col-md-5">
                 <canvas id="balanceChart" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500"></canvas>
@@ -71,8 +74,12 @@
             <div class="col-md-7 order-md-2">
                 <h2 class="featurette-heading fw-normal lh-1">{% trans 'Expenses by day. ' %}<span
                         class="text-body-secondary">{% trans 'Last seven days.' %}</span></h2>
-                <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how
-                    this layout would work with some actual real-world content in place.</p>
+                <p class="lead">
+                    {% blocktranslate %}
+                    Another featurette? Of course. More placeholder content here to give you an idea of how
+                    this layout would work with some actual real-world content in place.
+                    {% endblocktranslate %}
+                </p>
             </div>
             <div class="col-md-5 order-md-1">
                 <canvas id="expensesByDayChart" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500"></canvas>
@@ -85,9 +92,13 @@
             <div class="col-md-7">
                 <h2 class="featurette-heading fw-normal lh-1">{% trans 'Expenses by category. ' %}<span class="text-body-secondary">{% trans 'Current month.' %}</span>
                 </h2>
-                <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really
+                <p class="lead">
+                    {% blocktranslate %}
+                    And yes, this is the last block of representative placeholder content. Again, not really
                     intended to be actually read, simply here to give you a better view of what this would look like
-                    with some actual content. Your content.</p>
+                    with some actual content. Your content.
+                    {% endblocktranslate %}
+                </p>
             </div>
             <div class="col-md-5">
                 <canvas id="expensesByCategoryChart" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500"></canvas>
