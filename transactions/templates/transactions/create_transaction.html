@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <main class="container mt-3">
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'index' %}">Your transaction</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Create</li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans 'Your transaction' %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans 'Create' %}</li>
       </ol>
     </nav>
 
@@ -15,7 +16,7 @@
         <legend>{{ form.title }}</legend>
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Create Transaction</button>
+        <button type="submit" class="btn btn-primary">{% trans 'Create Transaction' %}</button>
     </form>
 
 </main>

@@ -119,6 +119,10 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'

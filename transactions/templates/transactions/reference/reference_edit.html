@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <main class="container mt-3">
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'reference_list' %}">Reference</a></li>
-            <li class="breadcrumb-item" aria-current="page"><a href="{% url 'reference_list' %}?form_name={{form_name}}">List</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'reference_list' %}">{% trans 'Reference' %}</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="{% url 'reference_list' %}?form_name={{form_name}}">{% trans 'List' %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Create' %}</li>
         </ol>
     </nav>
 
@@ -16,7 +17,7 @@
         <legend>{{ form.title }}</legend>
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">{% trans 'Create' %}</button>
     </form>
 
 </main>
