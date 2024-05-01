@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-01 19:40+0700\n"
+"POT-Creation-Date: 2024-05-01 20:01+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -217,21 +217,59 @@ msgid "Balance. "
 msgstr "Баланс. "
 
 #: .\transactions\templates\transactions\home.html:59
-#: .\transactions\templates\transactions\home.html:86
+#: .\transactions\templates\transactions\home.html:94
 msgid "Current month."
 msgstr "За текущий месяц."
 
-#: .\transactions\templates\transactions\home.html:72
+#: .\transactions\templates\transactions\home.html:61
+msgid ""
+"\n"
+"                    Allows you to see how much money you earned and spent "
+"this month.\n"
+"                    And the main thing is to see how much money you have "
+"left in the end.\n"
+"                    What is your net income.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Позволяет увидеть, сколько денег вы заработали и потратили "
+" в этом месяце.\n"
+"                    И главное – увидеть, сколько денег у вас "
+"осталось в итоге.\n"
+"                    Узнайте какой у вас чистый доход.\n"
+"                    "
+
+#: .\transactions\templates\transactions\home.html:77
 msgid "Expenses by day. "
 msgstr "Расходы за день. "
 
-#: .\transactions\templates\transactions\home.html:73
+#: .\transactions\templates\transactions\home.html:78
 msgid "Last seven days."
 msgstr "За последние семь дней."
 
-#: .\transactions\templates\transactions\home.html:86
+#: .\transactions\templates\transactions\home.html:80
+msgid ""
+"\n"
+"                    This chart allows you to monitor your daily tarts.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Этот график позволяет вам контролировать расходы по дням.\n"
+"                    "
+
+#: .\transactions\templates\transactions\home.html:94
 msgid "Expenses by category. "
 msgstr "Расходы по категориям. "
+
+#: .\transactions\templates\transactions\home.html:97
+msgid ""
+"\n"
+"                    This pie chart shows your monthly expenses by category.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Эта круговая диаграмма показывает ваши расходы за месяц в разбивки по категориям.\n"
+"                    "
 
 #: .\transactions\templates\transactions\index.html:17
 msgid "Add expenses"
