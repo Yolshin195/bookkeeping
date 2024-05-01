@@ -67,18 +67,16 @@ msgstr "Войти"
 
 #: .\transactions\forms.py:45
 msgid "Currency"
-msgstr "Валюта"
+msgstr "Справочник валют"
 
 #: .\transactions\forms.py:50 .\transactions\forms.py:115
 #: .\transactions\forms.py:139 .\transactions\forms.py:161
-#, fuzzy
-#| msgid "category"
 msgid "Category"
-msgstr "Категория"
+msgstr "Справочник категорий"
 
 #: .\transactions\forms.py:55 .\transactions\forms.py:69
 msgid "Account"
-msgstr "Счёт"
+msgstr "Справочник счетов"
 
 #: .\transactions\forms.py:70
 msgid "Month"
@@ -89,51 +87,36 @@ msgid "Owner"
 msgstr "Владелец"
 
 #: .\transactions\forms.py:114 .\transactions\forms.py:162
-#, fuzzy
-#| msgid "expense_account"
 msgid "Expense Account"
 msgstr "Счёт расхода"
 
 #: .\transactions\forms.py:116 .\transactions\forms.py:163
-#, fuzzy
-#| msgid "expense_amount"
+
 msgid "Expense Amount"
 msgstr "Сумма расхода"
 
 #: .\transactions\forms.py:117 .\transactions\forms.py:141
 #: .\transactions\forms.py:166
-#, fuzzy
-#| msgid "comment"
 msgid "Comment"
 msgstr "Комментарий"
 
 #: .\transactions\forms.py:122
-#, fuzzy
-#| msgid "Add expense"
 msgid "Add Expense"
 msgstr "Добавить расход"
 
 #: .\transactions\forms.py:138 .\transactions\forms.py:164
-#, fuzzy
-#| msgid "income_account"
 msgid "Income Account"
 msgstr "Счёт дохода"
 
 #: .\transactions\forms.py:140 .\transactions\forms.py:165
-#, fuzzy
-#| msgid "income_amount"
 msgid "Income Amount"
 msgstr "Сумма дохода"
 
 #: .\transactions\forms.py:146
-#, fuzzy
-#| msgid "Add income"
 msgid "Add Income"
 msgstr "Добавить доход"
 
 #: .\transactions\forms.py:171
-#, fuzzy
-#| msgid "transfer"
 msgid "Transfer"
 msgstr "Перевод между счетами"
 

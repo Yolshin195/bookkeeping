@@ -43,16 +43,31 @@ reference_form_list = {
     "Currency": {
         "Model": Currency,
         "title": _("Currency"),
+        "labels": {
+            "code": _("code"),
+            "name": _("name"),
+            "description": _("description")
+        },
         "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"]),
     },
     "Category": {
         "Model": Category,
         "title": _("Category"),
+        "labels": {
+            "code": _("code"),
+            "name": _("name"),
+            "description": _("description")
+        },
         "ReferenceForm": get_reference_form(reference_model=Category),
     },
     "Account": {
         "Model": Account,
         "title": _("Account"),
+        "labels": {
+            "code": _("code"),
+            "name": _("name"),
+            "description": _("description")
+        },
         "ReferenceForm": get_reference_form(reference_model=Account, reference_fields=["currency", "is_default"],
                                             attrs={
                                                 "currency": {'class': 'form-select'},
