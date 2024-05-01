@@ -6,12 +6,15 @@ from django.utils.translation import gettext_lazy as _
 from .models import Transaction, Category, Account, Currency, ProjectUser
 
 
-def get_reference_form(reference_model=None, reference_fields=None, attrs=None, choices=None):
+def get_reference_form(reference_model=None, reference_fields=None, attrs=None, choices=None, labels_fields=None):
     if reference_fields is None:
         reference_fields = []
 
     if attrs is None:
         attrs = {}
+
+    if labels_fields is None:
+        labels_fields = {}
 
     if "description" not in attrs:
         attrs["description"] = {'class': 'form-control', 'rows': 5}
@@ -21,6 +24,12 @@ def get_reference_form(reference_model=None, reference_fields=None, attrs=None, 
         class Meta:
             model = reference_model
             fields = ["code", "name", "description", *reference_fields]
+            labels = {
+                "code": _("Code"),
+                "name": _("Name"),
+                "description": _("Description"),
+                **labels_fields
+            }
 
         def __init__(self, *args, project=None, **kwargs):
             super(ReferenceForm, self).__init__(*args, **kwargs)
@@ -43,32 +52,23 @@ reference_form_list = {
     "Currency": {
         "Model": Currency,
         "title": _("Currency"),
-        "labels": {
-            "code": _("code"),
-            "name": _("name"),
-            "description": _("description")
-        },
-        "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"]),
+        "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"], labels_fields={
+            "symbol": _("Symbol")
+        }),
     },
     "Category": {
         "Model": Category,
         "title": _("Category"),
-        "labels": {
-            "code": _("code"),
-            "name": _("name"),
-            "description": _("description")
-        },
         "ReferenceForm": get_reference_form(reference_model=Category),
     },
     "Account": {
         "Model": Account,
         "title": _("Account"),
-        "labels": {
-            "code": _("code"),
-            "name": _("name"),
-            "description": _("description")
-        },
         "ReferenceForm": get_reference_form(reference_model=Account, reference_fields=["currency", "is_default"],
+                                            labels_fields={
+                                                "currency": _("Currency"),
+                                                "is_default": _("Is default")
+                                            },
                                             attrs={
                                                 "currency": {'class': 'form-select'},
                                                 "is_default": {'class': 'form-check-input'}
