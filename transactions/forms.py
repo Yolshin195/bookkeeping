@@ -1,6 +1,7 @@
 import calendar
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .models import Transaction, Category, Account, Currency, ProjectUser
 
@@ -41,14 +42,17 @@ def get_reference_form(reference_model=None, reference_fields=None, attrs=None, 
 reference_form_list = {
     "Currency": {
         "Model": Currency,
+        "title": _("Currency"),
         "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"]),
     },
     "Category": {
         "Model": Category,
+        "title": _("Category"),
         "ReferenceForm": get_reference_form(reference_model=Category),
     },
     "Account": {
         "Model": Account,
+        "title": _("Account"),
         "ReferenceForm": get_reference_form(reference_model=Account, reference_fields=["currency", "is_default"],
                                             attrs={
                                                 "currency": {'class': 'form-select'},
@@ -62,9 +66,9 @@ reference_form_list = {
 
 
 class TransactionFilterForm(forms.Form):
-    account = forms.ChoiceField(choices=[], required=False)
-    month = forms.ChoiceField(choices=[], required=False)
-    owner = forms.ChoiceField(choices=[])
+    account = forms.ChoiceField(label=_("Account"), choices=[], required=False)
+    month = forms.ChoiceField(label=_("Month"), choices=[], required=False)
+    owner = forms.ChoiceField(label=_("Owner"), choices=[])
 
     def __init__(self, *args, project=None, selected_account=None, selected_month=None, selected_owner=None, **kwargs):
         super(TransactionFilterForm, self).__init__(*args, **kwargs)
@@ -106,10 +110,16 @@ class ExpenseTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['expense_account', 'category', 'expense_amount', 'comment']
+        labels = {
+            'expense_account': _('Expense Account'),
+            'category': _('Category'),
+            'expense_amount': _('Expense Amount'),
+            'comment': _('Comment'),
+        }
 
     def __init__(self, *args, project=None, **kwargs):
         super(ExpenseTransactionForm, self).__init__(*args, **kwargs)
-        self.title = "Add Expense"
+        self.title = _("Add Expense")
         self.fields['category'].widget.attrs.update({'class': 'form-select col'})
         self.fields['expense_account'].widget.attrs.update({'class': 'form-select col'})
         self.fields['expense_amount'].widget.attrs.update({'class': 'form-control col'})
@@ -124,10 +134,16 @@ class IncomeTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['income_account', 'category', 'income_amount', 'comment']
+        labels = {
+            'income_account': _('Income Account'),
+            'category': _('Category'),
+            'income_amount': _('Income Amount'),
+            'comment': _('Comment'),
+        }
 
     def __init__(self, *args, project=None, **kwargs):
         super(IncomeTransactionForm, self).__init__(*args, **kwargs)
-        self.title = "Add Income"
+        self.title = _("Add Income")
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
         self.fields['income_account'].widget.attrs.update({'class': 'form-select'})
         self.fields['income_amount'].widget.attrs.update({'class': 'form-control'})
@@ -141,10 +157,18 @@ class TransferTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['category', 'expense_account', 'expense_amount', 'income_account', 'income_amount', 'comment']
+        labels = {
+            'category': _('Category'),
+            'expense_account': _('Expense Account'),
+            'expense_amount': _('Expense Amount'),
+            'income_account': _('Income Account'),
+            'income_amount': _('Income Amount'),
+            'comment': _('Comment'),
+        }
 
     def __init__(self, *args, project=None, **kwargs):
         super(TransferTransactionForm, self).__init__(*args, **kwargs)
-        self.title = "Transfer"
+        self.title = _("Transfer")
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
         self.fields['expense_account'].widget.attrs.update({'class': 'form-select'})
         self.fields['expense_amount'].widget.attrs.update({'class': 'form-control'})

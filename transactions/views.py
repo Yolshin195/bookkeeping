@@ -157,10 +157,13 @@ def reference_list(request):
     references = reference_form["Model"].objects.filter(
         project=ProjectUser.find_project_by_user(request.user)
     )
-    return render(request, 'transactions/reference/reference_list.html', {'reference_list': references, "form_name": form_name})
+    return render(request, 'transactions/reference/reference_list.html', {
+        'reference_list': references,
+        "form_name": form_name
+    })
 
 
 @login_required
 def reference_select(request):
-    references = list(reference_form_list.keys())
+    references = [{"name": name, "title": reference["title"]} for name, reference in reference_form_list.items()]
     return render(request, 'transactions/reference/reference_select.html', {'reference_list': references})

@@ -13,8 +13,8 @@
 
     <div class="list-group">
         {% for reference in reference_list %}
-          <a href="{% url 'reference_list' %}?form_name={{reference}}" class="list-group-item list-group-item-action" aria-current="true">
-            {{ reference }}
+          <a href="{% url 'reference_list' %}?form_name={{reference.name}}" class="list-group-item list-group-item-action" aria-current="true">
+            {{ reference.title }}
           </a>
         {% endfor %}
     </div>
