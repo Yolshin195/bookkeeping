@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-02 22:15+0700\n"
+"POT-Creation-Date: 2024-05-02 22:34+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -150,6 +150,18 @@ msgstr "Добавить доход"
 #: .\transactions\forms.py:186
 msgid "Transfer"
 msgstr "Перевод между счетами"
+
+#: .\transactions\reports.py:18
+msgid "Income"
+msgstr "Доходы"
+
+#: .\transactions\reports.py:18
+msgid "Expense"
+msgstr "Расходы"
+
+#: .\transactions\reports.py:18
+msgid "Balance"
+msgstr "Баланс"
 
 #: .\transactions\templates\transactions\create_transaction.html:10
 #: .\transactions\templates\transactions\index.html:10
