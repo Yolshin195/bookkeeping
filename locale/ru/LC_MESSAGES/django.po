@@ -91,7 +91,7 @@ msgstr "Справочник категорий"
 
 #: .\transactions\forms.py:66
 msgid "Account reference"
-msgstr "Справочник"
+msgstr "Справочник счетов"
 
 #: .\transactions\forms.py:69
 msgid "Currency"
