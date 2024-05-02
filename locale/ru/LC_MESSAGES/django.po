@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-01 20:19+0700\n"
+"POT-Creation-Date: 2024-05-02 22:02+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,26 +77,33 @@ msgstr "Имя"
 msgid "Description"
 msgstr "Описание"
 
-#: .\transactions\forms.py:54 .\transactions\forms.py:69
-msgid "Currency"
+#: .\transactions\forms.py:54
+msgid "Currency reference"
 msgstr "Справочник валют"
 
 #: .\transactions\forms.py:56
 msgid "Symbol"
 msgstr "Символ валюты"
 
-#: .\transactions\forms.py:61 .\transactions\forms.py:130
-#: .\transactions\forms.py:154 .\transactions\forms.py:176
-msgid "Category"
+#: .\transactions\forms.py:61
+msgid "Category reference"
 msgstr "Справочник категорий"
 
-#: .\transactions\forms.py:66 .\transactions\forms.py:84
-msgid "Account"
-msgstr "Справочник счетов"
+#: .\transactions\forms.py:66
+msgid "Account reference"
+msgstr "Справочник"
+
+#: .\transactions\forms.py:69
+msgid "Currency"
+msgstr "Валюта"
 
 #: .\transactions\forms.py:70
 msgid "Is default"
 msgstr "Выбирать по умолчанию?"
+
+#: .\transactions\forms.py:84
+msgid "Account"
+msgstr "Счет"
 
 #: .\transactions\forms.py:85
 msgid "Month"
@@ -109,6 +116,11 @@ msgstr "Владелец"
 #: .\transactions\forms.py:129 .\transactions\forms.py:177
 msgid "Expense Account"
 msgstr "Счёт расхода"
+
+#: .\transactions\forms.py:130 .\transactions\forms.py:154
+#: .\transactions\forms.py:176
+msgid "Category"
+msgstr "Категория"
 
 #: .\transactions\forms.py:131 .\transactions\forms.py:178
 msgid "Expense Amount"

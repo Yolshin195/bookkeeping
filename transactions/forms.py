@@ -51,19 +51,19 @@ def get_reference_form(reference_model=None, reference_fields=None, attrs=None, 
 reference_form_list = {
     "Currency": {
         "Model": Currency,
-        "title": _("Currency"),
+        "title": _("Currency reference"),
         "ReferenceForm": get_reference_form(reference_model=Currency, reference_fields=["symbol"], labels_fields={
             "symbol": _("Symbol")
         }),
     },
     "Category": {
         "Model": Category,
-        "title": _("Category"),
+        "title": _("Category reference"),
         "ReferenceForm": get_reference_form(reference_model=Category),
     },
     "Account": {
         "Model": Account,
-        "title": _("Account"),
+        "title": _("Account reference"),
         "ReferenceForm": get_reference_form(reference_model=Account, reference_fields=["currency", "is_default"],
                                             labels_fields={
                                                 "currency": _("Currency"),
