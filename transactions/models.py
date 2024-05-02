@@ -95,7 +95,7 @@ class Currency(ProjectReferenceModel):
     symbol = models.CharField(max_length=8)
 
     def __str__(self):
-        return f'{self.project.code}: {self.name} {self.symbol}'
+        return f'{self.project}: {self.name} {self.symbol}'
 
 
 class Category(ProjectReferenceModel):

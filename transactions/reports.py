@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from django.db.models import Sum, When, Case, DecimalField, F, Value, Q
 from django.db.models.functions import TruncDay
 from django.utils.timezone import get_default_timezone
+from django.utils.translation import gettext_lazy as _
 
 from transactions.models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 
@@ -14,7 +15,7 @@ default_timezone = get_default_timezone()
 
 
 def get_balance(owner: "User" = None):
-    labels = ['Income', 'Expense', 'Balance']
+    labels = [_('Income'), _('Expense'),_('Balance')]
     if owner is None:
         return {
             "labels": labels,
