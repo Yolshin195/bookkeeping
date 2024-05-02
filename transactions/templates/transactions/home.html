@@ -125,7 +125,7 @@
         data: {
           labels: {{expenses_by_day_report.labels|safe }},
           datasets: [{
-            label: '# of Votes',
+            label: '{% trans 'Expenses per day' %}',
             data: {{expenses_by_day_report.data|safe }},
             borderWidth: 1
           }]
@@ -147,7 +147,7 @@
                 data: {
                   labels: {{ balance_report.labels|safe }},
                   datasets: [{
-                    label: 'My First Dataset',
+                    label: '{% trans 'Balance for this month' %}',
                     data: {{ balance_report.data|safe }},
                     backgroundColor: [
                       'rgb(75, 192, 192)',
@@ -170,7 +170,7 @@
                 data: {
                     labels: {{ expenses_by_category_report.labels|safe }},
                       datasets: [{
-                        label: 'Expenses by category',
+                        label: '{% trans 'Expenses by category' %}',
                         data: {{ expenses_by_category_report.data|safe }}
                       }]
                 },

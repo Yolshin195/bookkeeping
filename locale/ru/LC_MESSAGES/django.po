@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-02 22:34+0700\n"
+"POT-Creation-Date: 2024-05-02 22:44+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -300,6 +300,18 @@ msgstr ""
 #: .\transactions\templates\transactions\home.html:116
 msgid "Back to top"
 msgstr "Вернуться наверх"
+
+#: .\transactions\templates\transactions\home.html:128
+msgid "Expenses per day"
+msgstr "Расходы за день"
+
+#: .\transactions\templates\transactions\home.html:150
+msgid "Balance for this month"
+msgstr "Баланс за этот месяц"
+
+#: .\transactions\templates\transactions\home.html:173
+msgid "Expenses by category"
+msgstr "Расходы по категориям"
 
 #: .\transactions\templates\transactions\index.html:17
 msgid "Add expenses"
