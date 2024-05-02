@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-02 22:02+0700\n"
+"POT-Creation-Date: 2024-05-02 22:15+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,9 +61,9 @@ msgstr "Справочник"
 msgid "Logout"
 msgstr "Выйти"
 
-#: .\templates\base.html:55
+#: .\templates\base.html:55 .\users\templates\registration\login.html:13
 msgid "Login"
-msgstr "Войти"
+msgstr "Вход в систему"
 
 #: .\transactions\forms.py:28
 msgid "Code"
@@ -124,7 +124,7 @@ msgstr "Категория"
 
 #: .\transactions\forms.py:131 .\transactions\forms.py:178
 msgid "Expense Amount"
-msgstr "Сумма расхода"
+msgstr "Суммарный расход"
 
 #: .\transactions\forms.py:132 .\transactions\forms.py:156
 #: .\transactions\forms.py:181
@@ -141,7 +141,7 @@ msgstr "Счёт дохода"
 
 #: .\transactions\forms.py:155 .\transactions\forms.py:180
 msgid "Income Amount"
-msgstr "Сумма дохода"
+msgstr "Суммарный доход"
 
 #: .\transactions\forms.py:161
 msgid "Add Income"
@@ -341,3 +341,15 @@ msgstr "Список"
 #: .\transactions\templates\transactions\settings.html:5
 msgid "Settings"
 msgstr "Настройки"
+
+#: .\users\templates\registration\login.html:17
+msgid "Username"
+msgstr "Логин"
+
+#: .\users\templates\registration\login.html:21
+msgid "Password"
+msgstr "Пароль"
+
+#: .\users\templates\registration\login.html:24
+msgid "Submit"
+msgstr "Войти"

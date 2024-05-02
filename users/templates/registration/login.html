@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block style %}
 <link href="{% static 'users/login.css' %}" rel="stylesheet"/>
@@ -9,18 +10,18 @@
 {% block content %}
 <div class="card users-login-card">
     <div class="card-body">
-        <h5 class="card-title">Login</h5>
+        <h5 class="card-title">{% trans 'Login' %}</h5>
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="Username" class="form-label">Username</label>
+                <label for="Username" class="form-label">{% trans 'Username' %}</label>
                 <input type="text" id="Username" name="username" class="form-control"  aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label">{% trans 'Password' %}</label>
                 <input type="password" id="password" name="password" class="form-control">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
         </form>
         {{ form.errors }}
     </div>
