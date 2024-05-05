@@ -105,7 +105,7 @@ class TransactionFilterForm(forms.Form):
 
     @staticmethod
     def choices_month():
-        return [(i, m) for i, m, in enumerate(calendar.month_name)]
+        return [(i, _(m)) for i, m, in enumerate(calendar.month_name)]
 
     @staticmethod
     def choices_account(project=None):
