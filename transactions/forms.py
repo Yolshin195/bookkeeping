@@ -220,6 +220,20 @@ class TransferTransactionForm(forms.ModelForm):
         self.fields['income_amount'].widget.attrs.update({'class': 'form-control'})
         self.fields['comment'].widget.attrs.update({'class': 'form-control', 'rows': 5})
 
-        self.fields['category'].queryset = Category.objects.filter(project=project)
-        self.fields['expense_account'].queryset = Account.objects.filter(project=project)
-        self.fields['income_account'].queryset = Account.objects.filter(project=project)
+        self.fields['category'].choices = self.choices_category(project)
+        self.fields['expense_account'].choices = self.choices_account(project)
+        self.fields['income_account'].choices = self.choices_account(project)
+
+    @staticmethod
+    def choices_account(project=None):
+        choices = [(None, "---------")]
+        if project:
+            choices.extend(Account.objects.filter(project=project).values_list("id", "name"))
+        return choices
+
+    @staticmethod
+    def choices_category(project=None):
+        choices = [(None, "---------")]
+        if project:
+            choices.extend(Category.objects.filter(project=project).values_list("id", "name"))
+        return choices
