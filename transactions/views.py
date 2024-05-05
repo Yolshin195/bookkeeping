@@ -160,7 +160,10 @@ def reference_edit(request, reference_id: str = None):
             return redirect(url)
 
     return render(request, 'transactions/reference/reference_edit.html', {
-        'form': form, 'form_name': form_name, 'reference_id': reference_id
+        'form': form,
+        'title': reference_form["title"],
+        'form_name': form_name,
+        'reference_id': reference_id
     })
 
 
@@ -202,6 +205,6 @@ def reference_delete(request, reference_id=None):
 
     return render(request, 'transactions/reference/reference_delete.html', context={
         "form_name": form_name,
-        "form_name_local": _(form_name),
+        'title': reference_form["title"],
         "reference": instance
     })

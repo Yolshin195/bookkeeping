@@ -16,7 +16,10 @@
     <form action="{% url 'reference_delete' reference.id %}?form_name={{form_name}}" method="post">
         {% csrf_token %}
         <fieldset disabled>
-            <legend>{% blocktrans %}Are you sure you want to delete this {{form_name_local}}?{% endblocktrans %}</legend>
+            <legend>{{title}}</legend>
+            <div class="alert alert-danger" role="alert">
+                {% blocktrans %}Are you sure you want to delete this Reference?{% endblocktrans %}
+            </div>
             <div class="mb-3">
               <label for="code" class="form-label">{% trans 'Code' %}</label>
               <input type="text" id="code" class="form-control" value="{{ reference.code }}">

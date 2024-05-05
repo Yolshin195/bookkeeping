@@ -20,7 +20,7 @@
     </nav>
 
     <form method="post">
-        <legend>{{ form.title }}</legend>
+        <legend>{{ title }}</legend>
         {% csrf_token %}
         {{ form.as_p }}
 
