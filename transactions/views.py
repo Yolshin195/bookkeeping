@@ -6,6 +6,7 @@ from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
@@ -159,7 +160,7 @@ def reference_edit(request, reference_id: str = None):
             return redirect(url)
 
     return render(request, 'transactions/reference/reference_edit.html', {
-        'form': form, 'form_name': form_name, 'is_edit': bool(reference_id)
+        'form': form, 'form_name': form_name, 'reference_id': reference_id
     })
 
 
@@ -182,3 +183,25 @@ def reference_list(request):
 def reference_select(request):
     references = [{"name": name, "title": reference["title"]} for name, reference in reference_form_list.items()]
     return render(request, 'transactions/reference/reference_select.html', {'reference_list': references})
+
+
+@login_required
+def reference_delete(request, reference_id=None):
+    form_name = request.GET.get('form_name', None)
+    if form_name is None:
+        return redirect('reference_select')
+
+    reference_form = reference_form_list.get(form_name)
+    project = ProjectUser.find_project_by_user(request.user)
+    instance = get_object_or_404(reference_form["Model"], id=UUID(reference_id), project=project)
+
+    if request.method == 'POST' and reference_id is not None:
+        instance.delete()
+        url = reverse('reference_list') + f'?form_name={form_name}'
+        return redirect(url)
+
+    return render(request, 'transactions/reference/reference_delete.html', context={
+        "form_name": form_name,
+        "form_name_local": _(form_name),
+        "reference": instance
+    })

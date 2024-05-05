@@ -10,7 +10,7 @@
             <li class="breadcrumb-item"><a href="{% url 'reference_list' %}">{% trans 'Reference' %}</a></li>
             <li class="breadcrumb-item" aria-current="page"><a href="{% url 'reference_list' %}?form_name={{form_name}}">{% trans 'List' %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-                {% if is_edit %}
+                {% if reference_id %}
                     {% trans 'Edit' %}
                 {% else %}
                     {% trans 'Create' %}
@@ -23,13 +23,15 @@
         <legend>{{ form.title }}</legend>
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">
-            {% if is_edit %}
-                {% trans 'Update' %}
-            {% else %}
-                {% trans 'Create' %}
-            {% endif %}
-        </button>
+
+        {% if reference_id %}
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="submit" class="btn btn-primary">{% trans 'Update' %}</button>
+            <a href="{% url 'reference_delete' reference_id %}?form_name={{form_name}}" class="btn btn-danger">{% trans 'Delete' %}</a>
+        </div>
+        {% else %}
+        <button type="submit" class="btn btn-primary">{% trans 'Create' %}</button>
+        {% endif %}
     </form>
 
 </main>

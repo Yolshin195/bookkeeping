@@ -14,4 +14,5 @@ urlpatterns = [
     path('reference/edit/<str:reference_id>', views.reference_edit, name="reference_edit"),
     path('reference/list', views.reference_list, name="reference_list"),
     path('reference/select', views.reference_select, name="reference_select"),
+    path('reference/delete/<str:reference_id>', views.reference_delete, name="reference_delete")
 ]
