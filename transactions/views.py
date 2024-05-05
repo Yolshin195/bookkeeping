@@ -6,7 +6,6 @@ from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 
 from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
