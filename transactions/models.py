@@ -48,6 +48,12 @@ class BaseReferenceModel(BaseEntity):
         return cls.objects.get(code=code)
 
 
+class TransactionType(BaseReferenceModel):
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Project(BaseReferenceModel):
 
     def __str__(self):
@@ -98,10 +104,6 @@ class Currency(ProjectReferenceModel):
         return f'{self.project}: {self.name} {self.symbol}'
 
 
-class Category(ProjectReferenceModel):
-    pass
-
-
 class Account(ProjectReferenceModel):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     is_default = models.BooleanField(default=False)
@@ -127,8 +129,8 @@ class Account(ProjectReferenceModel):
         return account.id if account else None
 
 
-class TransactionType(BaseReferenceModel):
-    pass
+class Category(ProjectReferenceModel):
+    type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Transaction(BaseEntity, BaseOwnerEntity, ProjectLink):
