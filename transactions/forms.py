@@ -1,9 +1,10 @@
 import calendar
 
 from django import forms
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from .models import Transaction, Category, Account, Currency, ProjectUser
+from .models import Transaction, Category, Account, Currency, ProjectUser, TransactionTypeEnum, TransactionType
 
 
 def get_reference_form(reference_model=None, reference_fields=None, attrs=None, choices=None, labels_fields=None):
@@ -59,7 +60,13 @@ reference_form_list = {
     "Category": {
         "Model": Category,
         "title": _("Category reference"),
-        "ReferenceForm": get_reference_form(reference_model=Category),
+        "ReferenceForm": get_reference_form(reference_model=Category, reference_fields=["type"],
+                                            labels_fields={
+                                                "type": _("Type")
+                                            },
+                                            attrs={
+                                                "type": {'class': 'form-select'},
+                                            }),
     },
     "Account": {
         "Model": Account,
@@ -156,7 +163,8 @@ class ExpenseTransactionForm(forms.ModelForm):
     def choices_category(project=None):
         choices = [(None, "---------")]
         if project:
-            choices.extend(Category.objects.filter(project=project).values_list("id", "name"))
+            expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
+            choices.extend(Category.objects.filter(Q(type=expense_type) | Q(type__isnull=True), project=project).values_list("id", "name"))
         return choices
 
 
@@ -193,7 +201,8 @@ class IncomeTransactionForm(forms.ModelForm):
     def choices_category(project=None):
         choices = [(None, "---------")]
         if project:
-            choices.extend(Category.objects.filter(project=project).values_list("id", "name"))
+            income_type = TransactionType.find_by_code(TransactionTypeEnum.INCOME.value)
+            choices.extend(Category.objects.filter(Q(type=income_type) | Q(type__isnull=True), project=project).values_list("id", "name"))
         return choices
 
 
@@ -235,5 +244,6 @@ class TransferTransactionForm(forms.ModelForm):
     def choices_category(project=None):
         choices = [(None, "---------")]
         if project:
-            choices.extend(Category.objects.filter(project=project).values_list("id", "name"))
+            exchange_type = TransactionType.find_by_code(TransactionTypeEnum.EXCHANGE.value)
+            choices.extend(Category.objects.filter(Q(type=exchange_type) | Q(type__isnull=True), project=project).values_list("id", "name"))
         return choices
