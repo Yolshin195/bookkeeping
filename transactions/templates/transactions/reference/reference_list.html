@@ -16,11 +16,11 @@
         <a href="{% url 'reference_edit' %}?form_name={{ form_name }}" class="btn btn-outline-primary">{% trans 'Create' %}</a>
     </div>
 
-    <ul class="list-group">
+    <div class="list-group">
         {% for reference in reference_list %}
-        <li class="list-group-item">{{ reference.name }}</li>
+        <a href="{% url 'reference_edit' reference.id %}?form_name={{ form_name }}" class="list-group-item list-group-item-action">{{ reference.name }}</a>
         {% endfor %}
-    </ul>
+    </div>
 
 </main>
 {% endblock %}

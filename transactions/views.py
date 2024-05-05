@@ -1,9 +1,11 @@
 import datetime
 from decimal import Decimal
+from uuid import UUID
 
 from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
@@ -56,8 +58,10 @@ def index(request):
     latest_transaction_list = latest_transaction.order_by("-created_at")
 
     transaction_sum = latest_transaction.aggregate(
-        total_expenses=Sum(Case(When(expense_account_id=selected_account, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
-        total_income=Sum(Case(When(income_account_id=selected_account, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
+        total_expenses=Sum(Case(When(expense_account_id=selected_account, then=F('expense_amount')), default=Value(0),
+                                output_field=DecimalField())),
+        total_income=Sum(Case(When(income_account_id=selected_account, then=F('income_amount')), default=Value(0),
+                              output_field=DecimalField())),
     ) if selected_account else {
         'total_expenses': Decimal('0'),
         'total_income': Decimal('0')
@@ -132,24 +136,31 @@ def settings(request):
 
 
 @login_required
-def reference_edit(request):
+def reference_edit(request, reference_id: str = None):
     form_name = request.GET.get('form_name')
     if form_name is None:
         return redirect('reference_select')
     reference_form = reference_form_list.get(form_name)
     project = ProjectUser.find_project_by_user(request.user)
+    build_form = reference_form["ReferenceForm"]
+
+    if reference_id:
+        instance = get_object_or_404(reference_form["Model"], id=UUID(reference_id), project=project)
+        form = build_form(request.POST or None, instance=instance, project=project)
+    else:
+        form = build_form(request.POST or None, project=project)
 
     if request.method == 'POST':
-        form = reference_form["ReferenceForm"](request.POST, project=project)
         if form.is_valid():
             form.instance.owner = request.user
             form.instance.project = project
             form.save()
-            return redirect('/')
-    else:
-        form = reference_form["ReferenceForm"](project=project)
+            url = reverse('reference_list') + f'?form_name={form_name}'
+            return redirect(url)
 
-    return render(request, 'transactions/reference/reference_edit.html', {'form': form, 'form_name': form_name})
+    return render(request, 'transactions/reference/reference_edit.html', {
+        'form': form, 'form_name': form_name, 'is_edit': bool(reference_id)
+    })
 
 
 @login_required
