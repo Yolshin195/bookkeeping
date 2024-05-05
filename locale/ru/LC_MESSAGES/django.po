@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-02 22:44+0700\n"
+"POT-Creation-Date: 2024-05-05 14:32+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,41 +113,45 @@ msgstr "Месяц"
 msgid "Owner"
 msgstr "Владелец"
 
-#: .\transactions\forms.py:129 .\transactions\forms.py:177
+#: .\transactions\forms.py:112 .\transactions\forms.py:119
+msgid "All"
+msgstr "Все"
+
+#: .\transactions\forms.py:130 .\transactions\forms.py:178
 msgid "Expense Account"
 msgstr "Счёт расхода"
 
-#: .\transactions\forms.py:130 .\transactions\forms.py:154
-#: .\transactions\forms.py:176
+#: .\transactions\forms.py:131 .\transactions\forms.py:155
+#: .\transactions\forms.py:177
 msgid "Category"
 msgstr "Категория"
 
-#: .\transactions\forms.py:131 .\transactions\forms.py:178
+#: .\transactions\forms.py:132 .\transactions\forms.py:179
 msgid "Expense Amount"
 msgstr "Суммарный расход"
 
-#: .\transactions\forms.py:132 .\transactions\forms.py:156
-#: .\transactions\forms.py:181
+#: .\transactions\forms.py:133 .\transactions\forms.py:157
+#: .\transactions\forms.py:182
 msgid "Comment"
 msgstr "Комментарий"
 
-#: .\transactions\forms.py:137
+#: .\transactions\forms.py:138
 msgid "Add Expense"
 msgstr "Добавить расход"
 
-#: .\transactions\forms.py:153 .\transactions\forms.py:179
+#: .\transactions\forms.py:154 .\transactions\forms.py:180
 msgid "Income Account"
 msgstr "Счёт дохода"
 
-#: .\transactions\forms.py:155 .\transactions\forms.py:180
+#: .\transactions\forms.py:156 .\transactions\forms.py:181
 msgid "Income Amount"
 msgstr "Суммарный доход"
 
-#: .\transactions\forms.py:161
+#: .\transactions\forms.py:162
 msgid "Add Income"
 msgstr "Добавить доход"
 
-#: .\transactions\forms.py:186
+#: .\transactions\forms.py:187
 msgid "Transfer"
 msgstr "Перевод между счетами"
 
@@ -162,6 +166,18 @@ msgstr "Расходы"
 #: .\transactions\reports.py:18
 msgid "Balance"
 msgstr "Баланс"
+
+#: .\transactions\reports.py:87
+msgid "Food"
+msgstr "Еда"
+
+#: .\transactions\reports.py:87
+msgid "Snack"
+msgstr "Еда вне дома"
+
+#: .\transactions\reports.py:87
+msgid "Car"
+msgstr "Машина"
 
 #: .\transactions\templates\transactions\create_transaction.html:10
 #: .\transactions\templates\transactions\index.html:10

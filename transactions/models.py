@@ -132,6 +132,7 @@ class TransactionType(BaseReferenceModel):
 
 
 class Transaction(BaseEntity, BaseOwnerEntity, ProjectLink):
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     expense_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='expense_transactions',

@@ -109,13 +109,14 @@ class TransactionFilterForm(forms.Form):
 
     @staticmethod
     def choices_account(project=None):
+        choices = [(None, _("All"))]
         if project:
-            return [(account.id, account.name) for account in Account.objects.filter(project=project)]
-        return []
+            choices.extend(Account.objects.filter(project=project).values_list("id", "name"))
+        return choices
 
     @staticmethod
     def choices_owner(project=None):
-        choices = [(None, "All")]
+        choices = [(None, _("All"))]
         if project:
             choices.extend(ProjectUser.objects.filter(project=project).values_list("user__id", "user__username"))
         return choices

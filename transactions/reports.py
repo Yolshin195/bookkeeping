@@ -84,7 +84,7 @@ def get_expenses_by_day(owner: "User" = None):
 def get_expenses_by_category(owner: "User" = None):
     if owner is None:
         return {
-            "labels": ["Food", "Snack", "Car"],
+            "labels": [_("Food"), _("Snack"), _("Car")],
             "data": [100000, 80000, 50000]
         }
 

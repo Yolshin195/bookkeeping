@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal
 
 from django.db.models import Q, Sum, Case, When, F, Value, DecimalField
 from django.shortcuts import render, redirect
@@ -57,7 +58,10 @@ def index(request):
     transaction_sum = latest_transaction.aggregate(
         total_expenses=Sum(Case(When(expense_account_id=selected_account, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
         total_income=Sum(Case(When(income_account_id=selected_account, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
-    )
+    ) if selected_account else {
+        'total_expenses': Decimal('0'),
+        'total_income': Decimal('0')
+    }
 
     context = {
         "filter_form": filter_form,
