@@ -4,7 +4,7 @@ from django import forms
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from .models import Transaction, Category, Account, Currency, ProjectUser, TransactionTypeEnum, TransactionType
+from .models import Transaction, Category, Account, Currency, ProjectUser, TransactionTypeEnum, TransactionType, Project
 
 
 def get_reference_form(reference_model=None, reference_fields=None, attrs=None, choices=None, labels_fields=None):
@@ -247,3 +247,21 @@ class TransferTransactionForm(forms.ModelForm):
             exchange_type = TransactionType.find_by_code(TransactionTypeEnum.EXCHANGE.value)
             choices.extend(Category.objects.filter(Q(type=exchange_type) | Q(type__isnull=True), project=project).values_list("id", "name"))
         return choices
+
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['code', 'name', 'description']
+        labels = {
+            "code": _("Code"),
+            "name": _("Name"),
+            "description": _("Description"),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+        self.title = _("Project")
+        self.fields['code'].widget.attrs.update({'class': 'form-control'})
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control', 'rows': 5})

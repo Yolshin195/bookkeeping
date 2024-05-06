@@ -30,6 +30,9 @@
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{% url 'reference_select' %}">{% trans 'Reference' %}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'project_list' %}">{% trans 'Projects' %}</a>
+                </li>
             </ul>
         </div>
         <form class="mb-0 me-2" action="{% url 'set_language' %}" method="post">

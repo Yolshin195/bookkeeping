@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account
+from .models import Transaction, TransactionTypeEnum, TransactionType, ProjectUser, Account, Project
 from .reports import get_balance, get_expenses_by_day, get_expenses_by_category
 from .services import Balance
 from .forms import (
@@ -15,7 +15,7 @@ from .forms import (
     IncomeTransactionForm,
     TransferTransactionForm,
     TransactionFilterForm,
-    reference_form_list
+    reference_form_list, ProjectForm
 )
 
 
@@ -206,4 +206,22 @@ def reference_delete(request, reference_id=None):
         "form_name": form_name,
         'title': reference_form["title"],
         "reference": instance
+    })
+
+
+@login_required
+def project_list(request):
+    project_users = ProjectUser.find_project_users_by_user(request.user)
+    return render(request, 'transactions/project/project_list.html', context={
+        "project_users": project_users
+    })
+
+
+@login_required
+def project_edit(request, project_id):
+    instance = get_object_or_404(Project, id=UUID(project_id))
+    project_form = ProjectForm(instance=instance)
+    return render(request, 'transactions/project/project_edit.html', context={
+        "project": instance,
+        "project_form": project_form
     })

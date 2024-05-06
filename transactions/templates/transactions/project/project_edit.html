@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<main class="container mt-3">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'project_list' %}">{% trans 'Projects' %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{project.name}}</li>
+        </ol>
+    </nav>
+
+    <form method="post">
+        <legend>{{ project_form.title }}</legend>
+        {% csrf_token %}
+        {{ project_form.as_p }}
+        <button type="submit" class="btn btn-primary">{% trans 'Create' %}</button>
+    </form>
+</main>
+{% endblock %}

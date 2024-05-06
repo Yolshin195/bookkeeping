@@ -69,6 +69,10 @@ class ProjectLink(models.Model):
 
 class ProjectUser(BaseEntity, ProjectLink):
     user = models.OneToOneField(User, unique=True, related_name="project_user", on_delete=models.CASCADE)
+    active = models.BooleanField()
+
+    class Meta:
+        unique_together = (("project", "user"),)
 
     def __str__(self):
         return f'{self.project}: {self.user}'
@@ -76,10 +80,18 @@ class ProjectUser(BaseEntity, ProjectLink):
     @classmethod
     def find_project_by_user(cls, user: User) -> Optional[Project]:
         try:
-            project_user = cls.objects.get(user=user)
+            project_user = cls.objects.get(user=user, active=True)
             return project_user.project
         except cls.DoesNotExist:
             return None
+
+    @classmethod
+    def find_project_users_by_user(cls, user: User) -> list[Project]:
+        try:
+            project_users = cls.objects.filter(user=user)
+            return project_users
+        except cls.DoesNotExist:
+            return []
 
 
 class ProjectReferenceModel(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
