@@ -150,13 +150,12 @@ def reference_edit(request, reference_id: str = None):
     else:
         form = build_form(request.POST or None, project=project)
 
-    if request.method == 'POST':
-        if form.is_valid():
-            form.instance.owner = request.user
-            form.instance.project = project
-            form.save()
-            url = reverse('reference_list') + f'?form_name={form_name}'
-            return redirect(url)
+    if request.method == 'POST' and form.is_valid():
+        form.instance.owner = request.user
+        form.instance.project = project
+        form.save()
+        url = reverse('reference_list') + f'?form_name={form_name}'
+        return redirect(url)
 
     return render(request, 'transactions/reference/reference_edit.html', {
         'form': form,
@@ -221,7 +220,13 @@ def project_list(request):
 def project_edit(request, project_id):
     instance = get_object_or_404(Project, id=UUID(project_id))
     project_form = ProjectForm(instance=instance)
+    project_users = ProjectUser.objects.filter(project=instance)
+
+    if request.method == 'POST' and project_form.is_valid():
+        pass
+
     return render(request, 'transactions/project/project_edit.html', context={
         "project": instance,
-        "project_form": project_form
+        "project_form": project_form,
+        "project_users": project_users
     })

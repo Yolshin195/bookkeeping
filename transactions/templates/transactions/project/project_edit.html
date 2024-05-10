@@ -17,7 +17,17 @@
         <legend>{{ project_form.title }}</legend>
         {% csrf_token %}
         {{ project_form.as_p }}
-        <button type="submit" class="btn btn-primary">{% trans 'Create' %}</button>
+        <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
     </form>
+
+    {% if project_users %}
+    <ul class="list-group">
+        {% for project_user in project_users %}
+        <li class="list-group-item">{{project_user.user.username}}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>{% trans 'There is not one user associated with this project' %}</p>
+    {% endif %}
 </main>
 {% endblock %}
