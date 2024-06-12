@@ -69,7 +69,7 @@ class ProjectLink(models.Model):
 
 class ProjectUser(BaseEntity, ProjectLink):
     user = models.OneToOneField(User, unique=True, related_name="project_user", on_delete=models.CASCADE)
-    active = models.BooleanField()
+    active = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (("project", "user"),)
