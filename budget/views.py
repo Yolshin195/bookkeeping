@@ -1,21 +1,17 @@
-import calendar
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from budget.models import Budget
 from budget.services import get_categories, Filter, get_root_category
 from transactions.forms import TransactionFilterForm
 from transactions.models import ProjectUser, Account
 
 
-@login_required
-def index(request):
+def get_index_context(request, project):
     current_date = datetime.now()
     current_year = current_date.year
 
-    project = ProjectUser.find_project_by_user(request.user)
     selected_month = int(request.GET.get("month", default=current_date.month))
     selected_account = request.GET.get("account", default=Account.get_default_id(project))
     selected_owner = request.GET.get("owner", default=None)
@@ -35,9 +31,24 @@ def index(request):
     root_category = get_root_category(budget_filter)
     categories = get_categories(budget_filter)
 
-    context = {
+    return {
         "budget": root_category,
         "filter_form": filter_form,
         "categories": categories
     }
+
+
+@login_required
+def index(request):
+    project = ProjectUser.find_project_by_user(request.user)
+
+    if project is None:
+        context = {
+            "budget": None,
+            "filter_form": None,
+            "categories": None
+        }
+    else:
+        context = get_index_context(request, project)
+
     return render(request, "budget/index.html", context)
