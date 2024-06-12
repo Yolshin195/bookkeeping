@@ -117,6 +117,9 @@ class Currency(ProjectReferenceModel):
 
 
 class Account(ProjectReferenceModel):
+    """
+    Account is a class that stores information about where the funds will come from
+    """
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     is_default = models.BooleanField(default=False)
 
@@ -142,10 +145,16 @@ class Account(ProjectReferenceModel):
 
 
 class Category(ProjectReferenceModel):
+    """
+    Category is a class that store information about the category of transactions
+    """
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Transaction(BaseEntity, BaseOwnerEntity, ProjectLink):
+    """
+    Transaction is a class that store information about expense and income and transfers between accounts
+    """
     image = models.ImageField(upload_to='images/', null=True, blank=True)
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
