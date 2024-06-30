@@ -132,8 +132,9 @@ class TransactionFilterForm(forms.Form):
 class ExpenseTransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['expense_account', 'category', 'expense_amount', 'comment']
+        fields = ['image', 'expense_account', 'category', 'expense_amount', 'comment']
         labels = {
+            'image': _('image'),
             'expense_account': _('Expense Account'),
             'category': _('Category'),
             'expense_amount': _('Expense Amount'),
