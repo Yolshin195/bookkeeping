@@ -3,6 +3,7 @@ import calendar
 from django import forms
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
+from mptt.forms import TreeNodeChoiceField
 
 from .models import Transaction, Category, Account, Currency, ProjectUser, TransactionTypeEnum, TransactionType
 
@@ -130,6 +131,8 @@ class TransactionFilterForm(forms.Form):
 
 
 class ExpenseTransactionForm(forms.ModelForm):
+    category = TreeNodeChoiceField(queryset=Category.objects.none())
+
     class Meta:
         model = Transaction
         fields = ['expense_account', 'category', 'expense_amount', 'comment']
@@ -143,12 +146,12 @@ class ExpenseTransactionForm(forms.ModelForm):
     def __init__(self, *args, project=None, **kwargs):
         super(ExpenseTransactionForm, self).__init__(*args, **kwargs)
         self.title = _("Add Expense")
+        self.fields['category'].queryset = self.queryset_category(project)
         self.fields['category'].widget.attrs.update({'class': 'form-select col'})
         self.fields['expense_account'].widget.attrs.update({'class': 'form-select col'})
         self.fields['expense_amount'].widget.attrs.update({'class': 'form-control col'})
         self.fields['comment'].widget.attrs.update({'class': 'form-control', 'rows': 5})
 
-        self.fields['category'].choices = self.choices_category(project)
         self.fields['expense_account'].choices = self.choices_account(project)
         self.fields['expense_account'].initial = Account.get_default(project)
 
@@ -160,12 +163,11 @@ class ExpenseTransactionForm(forms.ModelForm):
         return choices
 
     @staticmethod
-    def choices_category(project=None):
-        choices = [(None, "---------")]
+    def queryset_category(project=None):
         if project:
             expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
-            choices.extend(Category.objects.filter(Q(type=expense_type) | Q(type__isnull=True), project=project).values_list("id", "name"))
-        return choices
+            return Category.objects.filter(Q(type=expense_type) | Q(type__isnull=True), project=project)
+        return Category.objects.none()
 
 
 class IncomeTransactionForm(forms.ModelForm):

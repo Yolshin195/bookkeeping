@@ -4,6 +4,8 @@ from typing import Optional
 
 from django.contrib.auth.models import User
 from django.db import models
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
 
 
 class TransactionTypeEnum(Enum):
@@ -132,11 +134,15 @@ class Account(ProjectReferenceModel):
         return account.id if account else None
 
 
-class Category(ProjectReferenceModel):
+class Category(MPTTModel, ProjectReferenceModel):
     """
     Category is a class that store information about the category of transactions
     """
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, null=True, blank=True)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
 
 class Transaction(BaseEntity, BaseOwnerEntity, ProjectLink):
