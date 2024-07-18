@@ -9,8 +9,6 @@ from .models import BudgetCategory
 
 
 class BudgetCategoryForm(forms.ModelForm):
-    category = ChoiceField(label=_("Category"), choices=[])
-
     class Meta:
         model = BudgetCategory
         fields = ['category', 'allocated_amount']
@@ -26,11 +24,11 @@ class BudgetCategoryForm(forms.ModelForm):
         self.fields['category'].widget.attrs.update({'class': 'form-select col'})
         self.fields['allocated_amount'].widget.attrs.update({'class': 'form-control'})
 
-    @staticmethod
-    def choices_category(project=None):
+    @classmethod
+    def choices_category(cls, project=None):
         choices = [(None, "---------")]
         if project:
-            choices.extend(Category.objects.filter(project=project).values_list("id", "name"))
+            choices.extend(cls.queryset_category(project).values_list("id", "name"))
         return choices
 
     @staticmethod
