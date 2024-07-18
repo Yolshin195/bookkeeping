@@ -17,40 +17,36 @@
         </form>
     </div>
 
-    {% if budget %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">{% trans 'Budget' %}</h5>
-            <p class="card-text">{{budget.allocated_amount}}</p>
-            <p class="card-text">{{budget.total_expenses}}</p>
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ budget.spent }}"
-                 aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar" style="width: {{ budget.spent }}%">{{ budget.spent }}%</div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if categories %}
-    {% for category in categories %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">
-                {{ category.category__name }}
-            </h5>
-            <p class="card-text">{{category.allocated_amount}}</p>
-            <p class="card-text">{{category.total_expenses}}</p>
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ category.spent }}"
-                 aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar" style="width: {{ category.spent }}%">{{ category.spent }}%</div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-    {% else %}
-    <div class="alert alert-light" role="alert">
-        {% trans 'No categories found.' %}
-    </div>
-    {% endif %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">
+                <a href="{% url 'create_budget_category' %}" class="text-success-emphasis">
+                    <i class="bi bi-plus-circle"></i>
+                </a>
+            </th>
+            <th scope="col">{% trans 'Category' %}</th>
+            <th scope="col">{% trans 'Allocated amount' %}</th>
+            <th scope="col">{% trans 'Total expenses' %}</th>
+            <th scope="col">{% trans 'Actions' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if categories %}
+        {% for category in categories %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{category.category__name}}</td>
+            <td>{{category.allocated_amount}}</td>
+            <td>{{category.total_expenses}}</td>
+            <td>
+                <a href="{% url 'edit_budget_category' category.id %}"><i class="bi bi-pencil text-primary-emphasis"></i></a>
+                <a href="{% url 'delete_budget_category' category.id %}"><i class="bi bi-trash text-danger-emphasis"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
 </main>
 {% endblock %}

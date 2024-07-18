@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<main class="container mt-3">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'budget_main_page' %}">{% trans 'Budget' %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Delete' %}</li>
+        </ol>
+    </nav>
+
+    <form action="{% url 'delete_budget_category' instance.id %}" method="post">
+        {% csrf_token %}
+        <fieldset disabled>
+            <legend>{{title}}</legend>
+            <div class="alert alert-danger" role="alert">
+                {% blocktrans %}Are you sure you want to delete this Budget category?{% endblocktrans %}
+            </div>
+            <div class="mb-3">
+                <label for="code" class="form-label">{% trans 'Category' %}</label>
+                <input type="text" id="code" class="form-control" value="{{ instance.category }}">
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">{% trans 'Allocated amount' %}</label>
+                <input type="text" id="name" class="form-control" value="{{ instance.allocated_amount }}">
+            </div>
+        </fieldset>
+        <button type="submit" class="btn btn-danger">{% trans 'Delete' %}</button>
+    </form>
+</main>
+{% endblock %}
