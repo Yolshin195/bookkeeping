@@ -10,6 +10,7 @@ from transactions.models import Project, TransactionType, TransactionTypeEnum, T
 
 @dataclass
 class BudgetCategoryExpense:
+    id: str
     category__name: str
     allocated_amount: Decimal
     total_expenses: Decimal
@@ -37,6 +38,7 @@ def get_root_category(filter_categories: Filter) -> BudgetCategoryExpense:
     )
 
     return BudgetCategoryExpense(
+        id="",
         category__name="Budget",
         allocated_amount=budget.allocated_amount,
         total_expenses=total_expenses.get("total_amount"),
@@ -48,7 +50,7 @@ def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:
     budget_category_set = BudgetCategory.objects.filter(
         project=filter_categories.project
     ).values(
-        "category__code", "category__name", "allocated_amount"
+        "id", "category__code", "category__name", "allocated_amount"
     )
     expense = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
     expense_transactions = Transaction.objects.filter(
@@ -73,6 +75,7 @@ def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:
 
     for budget_category in budget_category_set:
         result[budget_category.get("category__code")] = BudgetCategoryExpense(
+            id=str(budget_category.get("id")),
             category__name=budget_category.get("category__name"),
             allocated_amount=budget_category.get("allocated_amount"),
             total_expenses=Decimal("0.00"),
