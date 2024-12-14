@@ -24,17 +24,23 @@ def get_balance(owner: "User" = None):
 
     end_date = datetime.now(tz=default_timezone)
     start_date = datetime(end_date.year, end_date.month, 1, tzinfo=default_timezone)
-    project = ProjectUser.find_project_by_user(owner)
-    account_id = Account.get_default_id(project)
+    project_user = ProjectUser.get_or_create(owner)
+    project = project_user.project
+    account_ids = [Account.get_default_id(project)]
+    if account_ids:
+        return {
+            "labels": labels,
+            "data": [0, 0, 0]
+        }
     result = Transaction.objects.filter(
         project=project,
         created_at__gte=start_date,  # Учитываем только транзакции, созданные после начальной даты
         created_at__lte=end_date  # Учитываем только транзакции, созданные до конечной даты
     ).filter(
-        Q(expense_account_id=account_id) | Q(income_account_id=account_id)
+        Q(expense_account_id__in=account_ids) | Q(income_account_id__=account_ids)
     ).aggregate(
-        total_expenses=Sum(Case(When(expense_account_id=account_id, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
-        total_income=Sum(Case(When(income_account_id=account_id, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
+        total_expenses=Sum(Case(When(expense_account_id__in=account_ids, then=F('expense_amount')), default=Value(0), output_field=DecimalField())),
+        total_income=Sum(Case(When(income_account_id__in=account_ids, then=F('income_amount')), default=Value(0), output_field=DecimalField())),
     )
     # Получаем значения суммы расходов и суммы доходов из результата агрегации
     total_expenses = result['total_expenses'] or 0
@@ -59,7 +65,8 @@ def get_expenses_by_day(owner: "User" = None):
     # Вычисляем начальную и конечную даты для последней недели
     end_date = datetime.now(tz=default_timezone)
     start_date = end_date - timedelta(days=7)
-    project = ProjectUser.find_project_by_user(owner)
+    project_user = ProjectUser.get_or_create(owner)
+    project = project_user.project
     account_id = Account.get_default_id(project)
 
     # Выполняем запрос на агрегацию данных
@@ -90,7 +97,8 @@ def get_expenses_by_category(owner: "User" = None):
 
     end_date = datetime.now(tz=default_timezone)
     start_date = datetime(end_date.year, end_date.month, 1, tzinfo=default_timezone)
-    project = ProjectUser.find_project_by_user(owner)
+    project_user = ProjectUser.get_or_create(owner)
+    project = project_user.project
     account_id = Account.get_default_id(project)
     expense_type = TransactionType.find_by_code(TransactionTypeEnum.EXPENSE.value)
 
