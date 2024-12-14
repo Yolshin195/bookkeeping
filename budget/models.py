@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-from transactions.models import Category, ProjectLink
+from transactions.models import Category, ProjectLink, Currency
 
 
 class BaseEntity(models.Model):
@@ -61,4 +61,5 @@ class Budget(ProjectReferenceModel):
 class BudgetCategory(BaseEntity, ProjectLink):
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     allocated_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)

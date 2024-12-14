@@ -20,29 +20,40 @@ class BudgetCategoryExpense:
 @dataclass
 class Filter:
     project: Project
-    account_id: UUID | None
+    currency_id: UUID | None
+    account_ids: list[UUID] | None
     owner_id: UUID | None
     month: int
     year: int
 
 
 def get_root_category(filter_categories: Filter) -> BudgetCategoryExpense:
-    budget = Budget.objects.get(project=filter_categories.project, is_default=True)
-    total_expenses = Transaction.objects.filter(
-        project=filter_categories.project,
-        expense_account_id=filter_categories.account_id,
-        created_at__month=filter_categories.month,
-        created_at__year=filter_categories.year
-    ).aggregate(
-        total_amount=Sum('expense_amount', default=Value(0), output_field=DecimalField(max_digits=10, decimal_places=2))
-    )
+    budget, _ = Budget.objects.get_or_create(project=filter_categories.project, is_default=True)
+
+    total_expenses = {"total_amount": Decimal(0)}
+    if filter_categories.account_ids:
+        total_expenses = Transaction.objects.filter(
+            project=filter_categories.project,
+            expense_account_id__in=filter_categories.account_ids,
+            created_at__month=filter_categories.month,
+            created_at__year=filter_categories.year
+        ).aggregate(
+            total_amount=Sum('expense_amount', default=Value(0), output_field=DecimalField(max_digits=10, decimal_places=2))
+        )
+
+    # Проверка на деление на ноль
+    allocated_amount = budget.allocated_amount
+    if allocated_amount > 0:
+        spent = (total_expenses.get("total_amount") / allocated_amount * 100).quantize(Decimal('1'), rounding=ROUND_DOWN)
+    else:
+        spent = Decimal('0')
 
     return BudgetCategoryExpense(
         id="",
         category__name="Budget",
         allocated_amount=budget.allocated_amount,
         total_expenses=total_expenses.get("total_amount"),
-        spent=(total_expenses.get("total_amount") / budget.allocated_amount * 100).quantize(Decimal('1'), rounding=ROUND_DOWN)
+        spent=spent
     )
 
 
@@ -59,9 +70,9 @@ def get_categories(filter_categories: Filter) -> list[BudgetCategoryExpense]:
         created_at__month=filter_categories.month,
         created_at__year=filter_categories.year
     )
-    if filter_categories.account_id:
+    if filter_categories.account_ids:
         expense_transactions = expense_transactions.filter(
-            Q(expense_account_id=filter_categories.account_id) | Q(income_account_id=filter_categories.account_id)
+            Q(expense_account_id__in=filter_categories.account_ids) | Q(income_account_id__in=filter_categories.account_ids)
         )
     if filter_categories.owner_id:
         expense_transactions = expense_transactions.filter(

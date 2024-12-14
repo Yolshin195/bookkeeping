@@ -67,21 +67,6 @@ class ProjectLink(models.Model):
         abstract = True
 
 
-class ProjectUser(BaseEntity, ProjectLink):
-    user = models.OneToOneField(User, unique=True, related_name="project_user", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.project}: {self.user}'
-
-    @classmethod
-    def find_project_by_user(cls, user: User) -> Optional[Project]:
-        try:
-            project_user = cls.objects.get(user=user)
-            return project_user.project
-        except cls.DoesNotExist:
-            return None
-
-
 class ProjectReferenceModel(BaseReferenceModel, BaseOwnerEntity, ProjectLink):
 
     class Meta:
@@ -137,6 +122,31 @@ class Category(ProjectReferenceModel):
     Category is a class that store information about the category of transactions
     """
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class ProjectUser(BaseEntity, ProjectLink):
+    user = models.OneToOneField(User, unique=True, related_name="project_user", on_delete=models.CASCADE)
+    currency = models.ForeignKey(Currency, blank=True, null=True, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.project}: {self.user}'
+
+    @classmethod
+    def get_or_create(cls, user: User) -> "ProjectUser":
+        try:
+            project_user = cls.objects.get(user=user)
+            return project_user
+        except cls.DoesNotExist:
+            return cls.create(user)
+
+    @classmethod
+    def create(cls, user: User):
+        if user is None:
+            raise cls.DoesNotExist
+        project = Project.objects.create(code=user.username, name=user.username, description="automatically created")
+        project_user = ProjectUser.objects.create(user=user, project=project)
+        return project_user
 
 
 class Transaction(BaseEntity, BaseOwnerEntity, ProjectLink):

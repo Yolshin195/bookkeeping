@@ -88,18 +88,24 @@ reference_form_list = {
 
 
 class TransactionFilterForm(forms.Form):
+    currency = forms.ChoiceField(label=_("Currency"), choices=[], required=False)
     account = forms.ChoiceField(label=_("Account"), choices=[], required=False)
     month = forms.ChoiceField(label=_("Month"), choices=[], required=False)
     owner = forms.ChoiceField(label=_("Owner"), choices=[])
 
-    def __init__(self, *args, project=None, selected_account=None, selected_month=None, selected_owner=None, **kwargs):
+    def __init__(self, *args, project=None, selected_currency=None, selected_account=None, selected_month=None, selected_owner=None, **kwargs):
         super(TransactionFilterForm, self).__init__(*args, **kwargs)
-        self.fields['account'].choices = self.choices_account(project)
+        self.fields['currency'].choices = self.choices_currency(project)
+        self.fields['account'].choices = self.choices_account(project, selected_currency)
         self.fields['month'].choices = self.choices_month()
         self.fields['owner'].choices = self.choices_owner(project)
+        self.fields['currency'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
         self.fields['account'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
         self.fields['month'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
         self.fields['owner'].widget.attrs.update({'class': 'form-select', 'onchange': 'this.form.submit()'})
+
+        if selected_currency:
+            self.fields['currency'].initial = selected_currency
 
         if selected_month:
             self.fields['month'].initial = selected_month
@@ -115,10 +121,25 @@ class TransactionFilterForm(forms.Form):
         return [(i, _(m)) for i, m, in enumerate(calendar.month_name)]
 
     @staticmethod
-    def choices_account(project=None):
+    def choices_currency(project=None):
         choices = [(None, _("All"))]
         if project:
-            choices.extend(Account.objects.filter(project=project).values_list("id", "name"))
+            select = Currency.objects.filter(project=project)
+            choices.extend(select.values_list("id", "name"))
+        return choices
+
+    @staticmethod
+    def queryset_account(project=None, selected_currency=None):
+        if project:
+            queryset = Account.objects.filter(project=project)
+            return queryset.filter(currency_id=selected_currency) if selected_currency else queryset
+        return Category.objects.none()
+
+    @classmethod
+    def choices_account(cls, project=None, selected_currency=None):
+        choices = [(None, _("All"))]
+        if project:
+            choices.extend(cls.queryset_account(project, selected_currency).values_list("id", "name"))
         return choices
 
     @staticmethod

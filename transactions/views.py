@@ -33,12 +33,15 @@ def home(request):
 @login_required
 def index(request):
     current_date = datetime.datetime.now()
-    project = ProjectUser.find_project_by_user(request.user)
+    project_user = get_object_or_404(ProjectUser, user=request.user)
+    project = project_user.project
     selected_month = int(request.GET.get("month", default=current_date.month))
-    selected_account = request.GET.get("account", default=Account.get_default_id(project))
+    selected_currency = request.GET.get("currency", default=project_user.currency_id)
+    selected_account = request.GET.get("account", default=None)
     selected_owner = request.GET.get("owner", default=None)
 
     filter_form = TransactionFilterForm(project=project,
+                                        selected_currency=selected_currency,
                                         selected_account=selected_account,
                                         selected_month=selected_month,
                                         selected_owner=selected_owner)
@@ -48,9 +51,15 @@ def index(request):
         created_at__month=selected_month,
         created_at__year=current_date.year
     )
-    if selected_account:
+
+    account_ids = None
+    if selected_currency and not selected_account:
+        account_ids = Account.objects.filter(project=project, currency=selected_currency).values_list("id")
+    elif selected_account:
+        account_ids = [selected_account]
+    if account_ids:
         latest_transaction = latest_transaction.filter(
-            Q(expense_account_id=selected_account) | Q(income_account_id=selected_account)
+            Q(expense_account_id__in=account_ids) | Q(income_account_id__in=account_ids)
         )
     if selected_owner:
         latest_transaction = latest_transaction.filter(
@@ -59,11 +68,11 @@ def index(request):
     latest_transaction_list = latest_transaction.order_by("-created_at")
 
     transaction_sum = latest_transaction.aggregate(
-        total_expenses=Sum(Case(When(expense_account_id=selected_account, then=F('expense_amount')), default=Value(0),
+        total_expenses=Sum(Case(When(expense_account_id__in=account_ids, then=F('expense_amount')), default=Value(0),
                                 output_field=DecimalField())),
-        total_income=Sum(Case(When(income_account_id=selected_account, then=F('income_amount')), default=Value(0),
+        total_income=Sum(Case(When(income_account_id__in=account_ids, then=F('income_amount')), default=Value(0),
                               output_field=DecimalField())),
-    ) if selected_account else {
+    ) if account_ids else {
         'total_expenses': Decimal('0'),
         'total_income': Decimal('0')
     }
@@ -79,7 +88,8 @@ def index(request):
 
 @login_required
 def create_transaction(request):
-    project = ProjectUser.find_project_by_user(request.user)
+    project_user = ProjectUser.get_or_create(request.user)
+    project = project_user.project
 
     if request.method == 'POST':
         form = ExpenseTransactionForm(request.POST, project=project)
@@ -97,7 +107,8 @@ def create_transaction(request):
 
 @login_required
 def create_income_transaction(request):
-    project = ProjectUser.find_project_by_user(request.user)
+    project_user = ProjectUser.get_or_create(request.user)
+    project = project_user.project
 
     if request.method == 'POST':
         form = IncomeTransactionForm(request.POST, project=project)
@@ -115,7 +126,8 @@ def create_income_transaction(request):
 
 @login_required
 def create_transfer_transaction(request):
-    project = ProjectUser.find_project_by_user(request.user)
+    project_user = ProjectUser.get_or_create(request.user)
+    project = project_user.project
 
     if request.method == 'POST':
         form = TransferTransactionForm(request.POST, project=project)
@@ -142,7 +154,8 @@ def reference_edit(request, reference_id: str = None):
     if form_name is None:
         return redirect('reference_select')
     reference_form = reference_form_list.get(form_name)
-    project = ProjectUser.find_project_by_user(request.user)
+    project_user = ProjectUser.get_or_create(request.user)
+    project = project_user.project
     build_form = reference_form["ReferenceForm"]
 
     if reference_id:
@@ -173,8 +186,10 @@ def reference_list(request):
     if form_name is None:
         return redirect('reference_select')
     reference_form = reference_form_list.get(form_name)
+    project_user = ProjectUser.get_or_create(request.user)
+    project = project_user.project
     references = reference_form["Model"].objects.filter(
-        project=ProjectUser.find_project_by_user(request.user)
+        project=project
     )
     return render(request, 'transactions/reference/reference_list.html', {
         'reference_list': references,
@@ -195,7 +210,8 @@ def reference_delete(request, reference_id=None):
         return redirect('reference_select')
 
     reference_form = reference_form_list.get(form_name)
-    project = ProjectUser.find_project_by_user(request.user)
+    project_user = ProjectUser.get_or_create(request.user)
+    project = project_user.project
     instance = get_object_or_404(reference_form["Model"], id=UUID(reference_id), project=project)
 
     if request.method == 'POST' and reference_id is not None:
